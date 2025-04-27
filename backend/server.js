@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import productRoutes from "./routes/productRoutes.js";
+import { sql } from "./config/db.js";
 
 dotenv.config();
 
@@ -18,6 +19,23 @@ app.use(morgan("dev")); // log requests
 
 app.use("/api/products", productRoutes);
 
-app.listen(PORT, () => {
-  console.log("Server is running on port " + PORT);
+async function initDB() {
+  try {
+    await sql`
+    CREATE TABLE IF NOT EXISTS products (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      price NUMERIC(10, 2) NOT NULL,
+      image VARCHAR(255) NOT NULL
+    )
+    `;
+  } catch (error) {
+    console.error("Error initializing database: ", error);
+  }
+}
+
+initDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
