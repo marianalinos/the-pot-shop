@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import productRoutes from "./routes/productRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 import { sql } from "./config/db.js";
 
 dotenv.config();
@@ -17,47 +18,61 @@ app.use(cors());
 app.use(helmet()); // middleware de segurança que ajuda a proteger o app definindo cabeçalhos HTTP
 app.use(morgan("dev")); // log requests
 
-// aplicar arcjet rate-limiting para todas as rotas
-app.use(async (req, res, next) => {
-  try {
-    const decision = await aj.protect(req, {
-      requested: 1,
-    });
-    if (decision.isDenied()) {
-      if (decision.reason.isRateLimit()) {
-        res.status(429).json({ error: "Too many requests." });
-      } else if (decision.reason.isBot()) {
-        res.status(403).json({ error: "Bots are not allowed." });
-      } else {
-        res.status(403).json({ error: "Access denied." });
-      }
-      return;
-    }
-    //check for spoofed bots
-    if(decision.results.some((result) => result.reason.isBot() && result.reason.isSpoofed())) {
-      res.status(403).json({ error: "Spoofed bot detected." });
-      return;
-    }
-  } catch (error) {
-    console.error("Error in arcjet middleware: ", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
 app.use("/api/products", productRoutes);
-
+app.use('/api/coupons', couponRoutes);
+// Database initialization
 async function initDB() {
   try {
     await sql`
-    CREATE TABLE IF NOT EXISTS products (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      price NUMERIC(10, 2) NOT NULL,
-      image VARCHAR(255) NOT NULL
-    )
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        price NUMERIC(10, 2) NOT NULL,
+        image VARCHAR(255) NOT NULL
+      )
     `;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS coupons (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        discount NUMERIC(10, 2) NOT NULL
+      )
+    `;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS customers (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        wallet NUMERIC(10, 2) NOT NULL
+      )
+    `;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS carts (
+        id SERIAL PRIMARY KEY,
+        total NUMERIC(10, 2) NOT NULL,
+        products INT[] NOT NULL, 
+        coupon_id INT,
+        FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE SET NULL
+      )
+    `;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS orders (
+        id SERIAL PRIMARY KEY,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        status BOOLEAN NOT NULL,
+        customer_id INT REFERENCES customers(id) ON DELETE SET NULL,
+        cart_id INT REFERENCES carts(id) ON DELETE SET NULL
+      )
+    `;
+    console.log("Database tables initialized successfully");
   } catch (error) {
-    console.error("Error initializing database: ", error);
+    console.error("Error initializing database:", error);
+    process.exit(1); // Exit if database initialization fails
   }
 }
 
