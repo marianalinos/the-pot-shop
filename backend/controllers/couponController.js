@@ -1,8 +1,8 @@
-import { Cupom } from "../models/Coupon.js";
+import { Coupon } from "../models/Coupon.js";
 
 export const getCoupons = async (req, res) => {
   try {
-    const coupons = await Cupom.getAll();
+    const coupons = await Coupon.getAll();
     res.status(200).json({ success: true, data: coupons });
   } catch (error) {
     console.error("Error fetching coupons: ", error);
@@ -18,7 +18,7 @@ export const createCoupon = async (req, res) => {
   }
 
   try {
-    const newCoupon = await Cupom.create({ name, discount });
+    const newCoupon = await Coupon.create({ name, discount });
     res.status(201).json({ success: true, data: newCoupon });
   } catch (error) {
     console.error("Error creating coupon: ", error);
@@ -30,7 +30,7 @@ export const getCoupon = async (req, res) => {
   const { id } = req.params;
   
   try {
-    const coupon = await Cupom.getById(id);
+    const coupon = await Coupon.getById(id);
     
     if (!coupon) {
       return res.status(404).json({ message: "Coupon not found" });
@@ -52,7 +52,7 @@ export const updateCoupon = async (req, res) => {
   }
 
   try {
-    const updatedCoupon = await Cupom.update(id, { name, discount });
+    const updatedCoupon = await Coupon.update(id, { name, discount });
     
     if (!updatedCoupon) {
       return res.status(404).json({ message: "Coupon not found" });
@@ -69,7 +69,7 @@ export const deleteCoupon = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const deletedCoupon = await Cupom.delete(id);
+    const deletedCoupon = await Coupon.delete(id);
     
     if (!deletedCoupon) {
       return res.status(404).json({ message: "Coupon not found" });
@@ -90,7 +90,7 @@ export const validateCoupon = async (req, res) => {
   }
 
   try {
-    const coupon = await Cupom.validate(name);
+    const coupon = await Coupon.validate(name);
     
     if (!coupon) {
       return res.status(404).json({ 

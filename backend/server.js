@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 import { sql } from "./config/db.js";
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(morgan("dev")); // log requests
 app.use("/api/products", productRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/customers', customerRoutes);
+app.use('/api/carts', cartRoutes);
 
 // Database initialization
 async function initDB() {

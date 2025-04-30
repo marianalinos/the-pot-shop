@@ -1,6 +1,6 @@
 import { sql } from "../config/db.js";
 
-export const Cupom = {
+export const Coupon = {
   // Get all coupons
   getAll: async () => {
     return await sql`SELECT * FROM coupons ORDER BY id DESC`;
