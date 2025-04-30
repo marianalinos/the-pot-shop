@@ -77,7 +77,7 @@ async function initDB() {
     console.log("Database tables initialized successfully");
   } catch (error) {
     console.error("Error initializing database:", error);
-    process.exit(1); // Exit if database initialization fails
+    process.exit(1);
   }
 }
 

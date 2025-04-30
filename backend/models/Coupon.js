@@ -1,51 +1,50 @@
 import { sql } from "../config/db.js";
 
 export const Coupon = {
-  // Get all coupons
   getAll: async () => {
-    return await sql`SELECT * FROM coupons ORDER BY id DESC`;
+    return await sql`SELECT * FROM coupons`;
   },
 
-  // Get coupon by ID
   getById: async (id) => {
-    const result = await sql`SELECT * FROM coupons WHERE id = ${id}`;
-    return result.length > 0 ? result[0] : null;
+    const [coupon] = await sql`SELECT * FROM coupons WHERE id = ${id}`;
+    return coupon || null;
   },
 
-  // Create new coupon
+  getByName: async (name) => {
+    const [coupon] = await sql`SELECT * FROM coupons WHERE name = ${name}`;
+    return coupon || null;
+  },
+
   create: async ({ name, discount }) => {
-    return await sql`
+    const [newCoupon] = await sql`
       INSERT INTO coupons (name, discount)
       VALUES (${name}, ${discount})
       RETURNING *
     `;
+    return newCoupon;
   },
 
-  // Update coupon
   update: async (id, { name, discount }) => {
-    return await sql`
+    const [updatedCoupon] = await sql`
       UPDATE coupons
       SET name = ${name}, discount = ${discount}
       WHERE id = ${id}
       RETURNING *
     `;
+    return updatedCoupon || null;
   },
 
-  // Delete coupon
   delete: async (id) => {
-    return await sql`
+    const [deletedCoupon] = await sql`
       DELETE FROM coupons
       WHERE id = ${id}
       RETURNING *
     `;
+    return deletedCoupon || null;
   },
 
-  // Validate coupon by name
   validate: async (name) => {
-    const result = await sql`
-      SELECT * FROM coupons 
-      WHERE name = ${name}
-    `;
-    return result.length > 0 ? result[0] : null;
+    const [coupon] = await sql`SELECT * FROM coupons WHERE name = ${name}`;
+    return coupon || null;
   }
 };

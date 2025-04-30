@@ -14,7 +14,6 @@ export const createCart = async (req, res) => {
   try {
     const { products = [], coupon_id } = req.body;
 
-    // Validate coupon exists if provided
     if (coupon_id) {
       const coupon = await Coupon.getById(coupon_id);
       if (!coupon) {
@@ -42,7 +41,6 @@ export const getCart = async (req, res) => {
     const cart = await Cart.getById(req.params.id);
     if (!cart) return res.status(404).json({ error: "Cart not found" });
 
-    // Get product details
     const products = cart.products.length
       ? await sql`
         SELECT * FROM products WHERE id = ANY(${cart.products})
@@ -63,7 +61,6 @@ export const updateCart = async (req, res) => {
   try {
     const { products, coupon_id } = req.body;
 
-    // Validate coupon exists if provided
     if (coupon_id) {
       const coupon = await Coupon.getById(coupon_id);
       if (!coupon) {
@@ -78,7 +75,6 @@ export const updateCart = async (req, res) => {
 
     if (!cart) return res.status(404).json({ error: "Cart not found" });
 
-    // Recalculate total after update
     await Cart.calculateTotal(cart.id);
     const updatedCart = await Cart.getById(cart.id);
 
