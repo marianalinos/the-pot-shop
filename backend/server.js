@@ -8,6 +8,7 @@ import productRoutes from "./routes/productRoutes.js";
 import couponRoutes from "./routes/couponRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 import { sql } from "./config/db.js";
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use("/api/products", productRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/carts', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Database initialization
 async function initDB() {
