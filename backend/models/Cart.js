@@ -6,8 +6,8 @@ export const Cart = {
   },
 
   getById: async (id) => {
-    const result = await sql`SELECT * FROM carts WHERE id = ${id}`;
-    return result[0];
+    const [cart] = await sql`SELECT * FROM carts WHERE id = ${id}`;
+    return cart || null;
   },
 
   create: async ({ products = [], coupon_id = null }) => {

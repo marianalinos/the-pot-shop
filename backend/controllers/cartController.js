@@ -37,23 +37,23 @@ export const createCart = async (req, res) => {
 };
 
 export const getCart = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const cart = await Cart.getById(req.params.id);
-    if (!cart) return res.status(404).json({ error: "Cart not found" });
-
-    const products = cart.products.length
-      ? await sql`
-        SELECT * FROM products WHERE id = ANY(${cart.products})
-      `
-      : [];
-
-    res.json({
-      ...cart,
-      products_detail: products,
-      item_count: cart.products.length,
-    });
+    const cart = await Cart.getById(id);
+    if (!cart) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Cart not found" 
+      });
+    }
+    res.status(200).json({ success: true, data: cart });
   } catch (error) {
-    res.status(500).json({ error: "Failed to get cart" });
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Failed to fetch cart" 
+    });
   }
 };
 
