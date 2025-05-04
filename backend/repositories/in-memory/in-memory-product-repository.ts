@@ -1,5 +1,8 @@
 import { Product } from "../../models/product";
-import * as ProductDTO from "../../controllers/product/product-dto";
+import {
+  CreateProductDTO,
+  UpdateProductDTO,
+} from "../../controllers/product/product-dto";
 import { ProductRepository } from "../product-repository";
 
 export class InMemoryProductRepository implements ProductRepository {
@@ -8,7 +11,7 @@ export class InMemoryProductRepository implements ProductRepository {
   constructor(products: Product[] = []) {
     this.products = products;
   }
-  async create(product: ProductDTO.CreateProductDTO): Promise<void> {
+  async create(product: CreateProductDTO): Promise<void> {
     const newProduct = new Product(
       this.products.length + 1,
       product.name,
@@ -30,7 +33,7 @@ export class InMemoryProductRepository implements ProductRepository {
     const product = this.products.find((product) => product.getId() === id);
     return product ?? null;
   }
-  async update(product: ProductDTO.UpdateProductDTO): Promise<Product> {
+  async update(product: UpdateProductDTO): Promise<Product> {
     const index = this.products.findIndex(
       (productRepo) => productRepo.getId() === product.id
     );

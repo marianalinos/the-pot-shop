@@ -11,6 +11,3 @@ export interface UpdateProductDTO {
     price: Decimal;
     image: string;
 }
-export interface DeleteProductDTO {
-    id: number;
-}

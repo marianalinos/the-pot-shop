@@ -1,11 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { ProductRepository } from "../../repositories/product-repository";
 import { Request, Response } from "express";
-import {
-  CreateProductDTO,
-  UpdateProductDTO,
-  DeleteProductDTO,
-} from "./product-dto";
+import { CreateProductDTO, UpdateProductDTO } from "./product-dto";
 
 export class ProductController {
   private repository: ProductRepository;
@@ -62,10 +58,9 @@ export class ProductController {
   }
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const deleteUserRequest: DeleteProductDTO = {
+      const deleteUserRequest = {
         id: Number(req.params.id),
       };
-
       await this.repository.delete(deleteUserRequest.id);
 
       return res.status(200).json(deleteUserRequest);

@@ -1,152 +1,91 @@
-import { Coupon } from "../../models/coupon.js";
+import { Decimal } from "@prisma/client/runtime/library";
+import { Request, Response } from "express";
+import { CouponRepository } from "../../repositories/coupon-repository";
+import { CreateCouponDTO, UpdateCouponDTO } from "./coupon-dto";
 
-export const getCoupons = async (req, res) => {
-  try {
-    const coupons = await Coupon.getAll();
-    res.status(200).json({ success: true, data: coupons });
-  } catch (error) {
-    console.error("Error fetching coupons:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch coupons" });
-  }
-};
+export class CouponController {
+  private repository: CouponRepository;
 
-export const createCoupon = async (req, res) => {
-  const { name, discount } = req.body;
-
-  if (!name || discount === undefined) {
-    return res.status(400).json({ 
-      success: false, 
-      message: "Name and discount are required" 
-    });
+  constructor(repository: CouponRepository) {
+    this.repository = repository;
   }
 
-  try {
-    const existingCoupon = await Coupon.getByName(name);
-    if (existingCoupon) {
-      return res.status(400).json({
-        success: false,
-        message: "Coupon with this name already exists"
-      });
+  async create(req: Request, res: Response): Promise<Response> {
+    try {
+      const createCouponRequest: CreateCouponDTO = {
+        code: String(req.body.code),
+        discount: new Decimal(req.body.discount),
+        expiration: req.body.expiration
+          ? new Date(req.body.expiration)
+          : undefined,
+        used: req.body.used ?? false,
+      };
+
+      await this.repository.create(createCouponRequest);
+      return res.status(201).send();
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-
-    const newCoupon = await Coupon.create({ name, discount });
-    res.status(201).json({ success: true, data: newCoupon });
-  } catch (error) {
-    console.error("Error creating coupon:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to create coupon" 
-    });
   }
-};
 
-export const getCoupon = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const coupon = await Coupon.getById(id);
-    if (!coupon) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Coupon not found" 
-      });
+  async read(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = req.query.id as string;
+      const coupons = await this.repository.read(
+        isNaN(Number(id)) || Number(id) === 0 ? undefined : Number(id)
+      );
+      return res.status(200).json(coupons);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-    res.status(200).json({ success: true, data: coupon });
-  } catch (error) {
-    console.error("Error fetching coupon:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to fetch coupon" 
-    });
-  }
-};
-
-export const updateCoupon = async (req, res) => {
-  const { id } = req.params;
-  const { name, discount } = req.body;
-
-  if (!name || discount === undefined) {
-    return res.status(400).json({ 
-      success: false, 
-      message: "Name and discount are required" 
-    });
   }
 
-  try {
-    const currentCoupon = await Coupon.getById(id);
-    if (!currentCoupon) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Coupon not found" 
-      });
+  async findById(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const coupon = await this.repository.findById(Number(id));
+      return res.status(200).json(coupon);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    if (currentCoupon.name !== name) {
-      const existingCoupon = await Coupon.getByName(name);
-      if (existingCoupon) {
-        return res.status(400).json({
-          success: false,
-          message: "Coupon with this name already exists"
-        });
-      }
+  async findByCode(req: Request, res: Response): Promise<Response> {
+    try {
+      const { code } = req.params;
+      const coupon = await this.repository.findByCode(code);
+      return res.status(200).json(coupon);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-
-    const updatedCoupon = await Coupon.update(id, { name, discount });
-    res.status(200).json({ success: true, data: updatedCoupon });
-  } catch (error) {
-    console.error("Error updating coupon:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to update coupon" 
-    });
   }
-};
 
-export const deleteCoupon = async (req, res) => {
-  const { id } = req.params;
+  async update(req: Request, res: Response): Promise<Response> {
+    try {
+      const updateCouponRequest: UpdateCouponDTO = {
+        id: Number(req.params.id),
+        code: String(req.body.code),
+        discount: new Decimal(req.body.discount),
+        expiration: req.body.expiration
+          ? new Date(req.body.expiration)
+          : undefined,
+        used: req.body.used ?? false,
+      };
 
-  try {
-    const deletedCoupon = await Coupon.delete(id);
-    if (!deletedCoupon) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Coupon not found" 
-      });
+      const updatedCoupon = await this.repository.update(updateCouponRequest);
+      return res.status(200).json(updatedCoupon);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-    res.status(200).json({ success: true, data: deletedCoupon });
-  } catch (error) {
-    console.error("Error deleting coupon:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to delete coupon" 
-    });
-  }
-};
-
-export const validateCoupon = async (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ 
-      success: false, 
-      message: "Coupon name is required" 
-    });
   }
 
-  try {
-    const coupon = await Coupon.validate(name);
-    if (!coupon) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Invalid coupon" 
-      });
+  async delete(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = Number(req.params.id);
+      await this.repository.delete(id);
+      return res.status(200).json({ id });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-    res.status(200).json({ success: true, data: coupon });
-  } catch (error) {
-    console.error("Error validating coupon:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to validate coupon" 
-    });
   }
-};
+}

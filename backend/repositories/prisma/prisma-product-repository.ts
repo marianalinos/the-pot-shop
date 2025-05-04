@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ProductRepository } from "../product-repository";
 import { Product } from "../../models/product";
-import * as ProductDTO from "../../controllers/product/product-dto";
+import { CreateProductDTO, UpdateProductDTO } from "../../controllers/product/product-dto";
 
 export class PrismaProductRepository implements ProductRepository {
   private prisma: PrismaClient;
@@ -9,7 +9,7 @@ export class PrismaProductRepository implements ProductRepository {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async create(product: ProductDTO.CreateProductDTO): Promise<void> {
+  async create(product: CreateProductDTO): Promise<void> {
     await this.prisma.product.create({
       data: {
         name: product.name,
@@ -42,7 +42,7 @@ export class PrismaProductRepository implements ProductRepository {
         new Product(product.id, product.name, product.price, product.image)
     );
   }
-  async update(product: ProductDTO.UpdateProductDTO): Promise<Product> {
+  async update(product: UpdateProductDTO): Promise<Product> {
     const updatedProduct = await this.prisma.product.update({
       where: {
         id: product.id,
