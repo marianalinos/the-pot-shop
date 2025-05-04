@@ -62,11 +62,13 @@ export class ProductController {
   }
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const deleteProductRequest: DeleteProductDTO = {
-        id: Number(req.params.id)
+      const deleteUserRequest: DeleteProductDTO = {
+        id: Number(req.params.id),
       };
-      const product = await this.repository.delete(Number(deleteProductRequest));
-      return res.status(200).json(product);
+
+      await this.repository.delete(deleteUserRequest.id);
+
+      return res.status(200).json(deleteUserRequest);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }
