@@ -1,95 +1,76 @@
-import { Cart } from "../../models/cart.js";
-import { Coupon } from "../../models/coupon.js";
+import { CartRepository } from "../../repositories/cart-repository";
+import { Request, Response } from "express";
+import { CreateCartDTO, UpdateCartDTO } from "./cart-dto";
 
-export const getCarts = async (req, res) => {
-  try {
-    const carts = await Cart.getAll();
-    res.json(carts);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+export class CartController {
+  constructor(private repository: CartRepository) {}
 
-export const createCart = async (req, res) => {
-  try {
-    const { products = [], coupon_id } = req.body;
-
-    if (coupon_id) {
-      const coupon = await Coupon.getById(coupon_id);
-      if (!coupon) {
-        return res.status(400).json({ error: "Invalid coupon ID" });
-      }
+  async create(req: Request, res: Response) {
+    try {
+      const createCartRequest: CreateCartDTO = {
+        couponCode: String(req.body.couponCode),
+        customerId: Number(req.body.customerId),
+      };
+      await this.repository.create(createCartRequest);
+      return res.status(201).send();
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-
-    const cart = await Cart.create({
-      products,
-      coupon_id: coupon_id || null,
-    });
-
-    res.status(201).json(cart);
-  } catch (error) {
-    res.status(500).json({
-      error: error.message.includes("don't exist")
-        ? "One or more products don't exist"
-        : "Failed to create cart",
-    });
   }
-};
 
-export const getCart = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const cart = await Cart.getById(id);
-    if (!cart) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Cart not found" 
-      });
+  async read(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = req.query.id as string;
+      const carts = await this.repository.read(
+        isNaN(Number(id)) || Number(id) == 0 ? undefined : Number(id)
+      );
+      return res.status(200).json(carts);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-    res.status(200).json({ success: true, data: cart });
-  } catch (error) {
-    console.error("Error fetching cart:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Failed to fetch cart" 
-    });
   }
-};
 
-export const updateCart = async (req, res) => {
-  try {
-    const { products, coupon_id } = req.body;
-
-    if (coupon_id) {
-      const coupon = await Coupon.getById(coupon_id);
-      if (!coupon) {
-        return res.status(400).json({ error: "Invalid coupon ID" });
-      }
+  async findById(req: Request, res: Response) {
+    try {
+      const cart = await this.repository.findById(Number(req.params.id));
+      return cart
+        ? res.status(200).json(cart)
+        : res.status(404).json({ message: "Cart not found" });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
-
-    const cart = await Cart.update(req.params.id, {
-      products: products || [],
-      coupon_id: coupon_id || null,
-    });
-
-    if (!cart) return res.status(404).json({ error: "Cart not found" });
-
-    await Cart.calculateTotal(cart.id);
-    const updatedCart = await Cart.getById(cart.id);
-
-    res.json(updatedCart);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
-};
 
-export const deleteCart = async (req, res) => {
-  try {
-    const cart = await Cart.delete(req.params.id);
-    if (!cart) return res.status(404).json({ error: "Cart not found" });
-    res.json(cart);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  async update(req: Request, res: Response): Promise<Response> {
+    try {
+      const updateCartRequest: UpdateCartDTO = {
+        id: Number(req.params.id),
+        couponCode: String(req.body.couponCode),
+        customerId: Number(req.body.customerId),
+      };
+      const cart = await this.repository.update(updateCartRequest);
+      return res.status(200).json(cart);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
   }
-};
+
+  async delete(req: Request, res: Response) {
+    try {
+      await this.repository.delete(Number(req.params.id));
+      return res.status(204).send();
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+
+  async calculateTotal(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const total = await this.repository.calculateTotal(Number(id));
+      return res.status(200).json({ total });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+}

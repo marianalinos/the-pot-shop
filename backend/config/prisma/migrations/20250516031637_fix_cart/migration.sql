@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Cart" ALTER COLUMN "couponCode" SET DEFAULT NULL;

@@ -25,7 +25,7 @@ model Coupon {
   discount   Decimal  @db.Decimal(10, 2)
   expiration DateTime?
   used       Boolean  @default(false)
-  carts      Cart[] // relação inversa
+  carts      Cart[] 
 }
 
 model Customer {
@@ -35,15 +35,18 @@ model Customer {
   password String
   wallet   Decimal @db.Decimal(10, 2)
   orders   Order[]
+  carts    Cart[]  
 }
 
 model Cart {
-  id       Int           @id @unique @default(autoincrement())
-  total    Decimal       @db.Decimal(10, 2)
-  products CartProduct[]
-  coupon   Coupon?       @relation(fields: [couponId], references: [id], onDelete: SetNull)
-  couponId Int?
-  order    Order?
+  id          Int           @id @unique @default(autoincrement())
+  total       Decimal       @db.Decimal(10, 2)
+  products    CartProduct[]
+  coupon      Coupon?       @relation(fields: [couponCode], references: [code], onDelete: SetNull)
+  couponCode  String?       
+  order       Order?        
+  customer    Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull) 
+  customerId  Int?
 }
 
 model CartProduct {
@@ -52,6 +55,7 @@ model CartProduct {
   cartId    Int
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
+  quantity  Int     @default(1)
 }
 
 model Order {
