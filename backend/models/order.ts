@@ -1,39 +1,51 @@
-import { sql } from "../config/db.js";
+import { Decimal } from "@prisma/client/runtime/library";
+import { OrderStatus } from "@prisma/client";
 
-export const Order = {
-  getAll: async () => {
-    return await sql`SELECT * FROM orders`;
-  },
+export class Order {
+  private order_id: number;
+  private order_createdAt: Date;
+  private order_status: OrderStatus;
+  private order_total: Decimal;
+  private order_customerId: number | null;
+  private order_cartId: number;
 
-  getById: async (id) => {
-    const result = await sql`SELECT * FROM orders WHERE id = ${id}`;
-    return result[0];
-  },
-
-  create: async ({ status, customer_id, cart_id }) => {
-    return await sql`
-      INSERT INTO orders (status, customer_id, cart_id)
-      VALUES (${status}, ${customer_id}, ${cart_id})
-      RETURNING *
-    `;
-  },
-
-  update: async (id, { status, customer_id, cart_id }) => {
-    return await sql`
-      UPDATE orders
-      SET status = ${status}, 
-          customer_id = ${customer_id}, 
-          cart_id = ${cart_id}
-      WHERE id = ${id}
-      RETURNING *
-    `;
-  },
-
-  delete: async (id) => {
-    return await sql`
-      DELETE FROM orders 
-      WHERE id = ${id} 
-      RETURNING *
-    `;
+  constructor(
+    id: number,
+    createdAt: Date,
+    status: OrderStatus,
+    total: Decimal,
+    customerId: number | null,
+    cartId: number
+  ) {
+    this.order_id = id;
+    this.order_createdAt = createdAt;
+    this.order_status = status;
+    this.order_total = total;
+    this.order_customerId = customerId;
+    this.order_cartId = cartId;
   }
-};
+
+  public getId(): number {
+    return this.order_id;
+  }
+
+  public getCreatedAt(): Date {
+    return this.order_createdAt;
+  }
+
+  public getStatus(): OrderStatus {
+    return this.order_status;
+  }
+
+  public getTotal(): Decimal {
+    return this.order_total;
+  }
+
+  public getCustomerId(): number | null {
+    return this.order_customerId;
+  }
+
+  public getCartId(): number {
+    return this.order_cartId;
+  }
+}

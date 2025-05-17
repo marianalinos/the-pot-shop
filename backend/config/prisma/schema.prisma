@@ -20,12 +20,12 @@ model Product {
 }
 
 model Coupon {
-  id         Int      @id @unique @default(autoincrement())
-  code       String   @unique
-  discount   Decimal  @db.Decimal(10, 2)
+  id         Int       @id @unique @default(autoincrement())
+  code       String    @unique
+  discount   Decimal   @db.Decimal(10, 2)
   expiration DateTime?
-  used       Boolean  @default(false)
-  carts      Cart[] 
+  used       Boolean   @default(false)
+  carts      Cart[]
 }
 
 model Customer {
@@ -35,18 +35,18 @@ model Customer {
   password String
   wallet   Decimal @db.Decimal(10, 2)
   orders   Order[]
-  carts    Cart[]  
+  carts    Cart[]
 }
 
 model Cart {
-  id          Int           @id @unique @default(autoincrement())
-  total       Decimal       @db.Decimal(10, 2)
-  products    CartProduct[]
-  coupon      Coupon?       @relation(fields: [couponCode], references: [code], onDelete: SetNull)
-  couponCode  String?       
-  order       Order?        
-  customer    Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull) 
-  customerId  Int?
+  id         Int           @id @unique @default(autoincrement())
+  total      Decimal       @db.Decimal(10, 2)
+  products   CartProduct[]
+  coupon     Coupon?       @relation(fields: [couponCode], references: [code], onDelete: SetNull)
+  couponCode String?
+  order      Order?
+  customer   Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerId Int?
 }
 
 model CartProduct {
@@ -59,11 +59,18 @@ model CartProduct {
 }
 
 model Order {
-  id         Int       @id @unique @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  status     Boolean
-  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  status     OrderStatus @default(PENDING)
+  total      Decimal     @db.Decimal(10, 2)
+  customer   Customer?   @relation(fields: [customerId], references: [id], onDelete: SetNull)
   customerId Int?
-  cart       Cart?     @relation(fields: [cartId], references: [id], onDelete: SetNull)
-  cartId     Int?      @unique
+  cart       Cart        @relation(fields: [cartId], references: [id])
+  cartId     Int         @unique
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
