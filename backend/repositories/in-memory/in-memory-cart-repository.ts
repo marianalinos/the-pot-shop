@@ -1,4 +1,3 @@
-// src/repositories/in-memory/in-memory-cart-repository.ts
 import { Cart } from "../../models/cart";
 import { CartRepository } from "../cart-repository";
 import { CreateCartDTO, UpdateCartDTO } from "../../controllers/cart/cart-dto";

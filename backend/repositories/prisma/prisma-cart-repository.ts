@@ -12,21 +12,17 @@ export class PrismaCartRepository implements CartRepository {
   }
 
   async create(data: CreateCartDTO): Promise<Cart> {
-    // 1. Preparar dados básicos
     const createData: any = {
       total: 0,
     };
 
-    // 2. Tratar customer (se existir)
     if (data.customerId) {
       createData.customer = {
         connect: { id: data.customerId },
       };
     }
 
-    // 3. Tratar coupon (se existir)
     if (data.couponCode && data.couponCode !== "null") {
-      // Verificar se o cupom existe
       const couponExists = await this.prisma.coupon.findUnique({
         where: { code: data.couponCode },
       });
@@ -35,16 +31,11 @@ export class PrismaCartRepository implements CartRepository {
         throw new Error(`Cupom ${data.couponCode} não encontrado`);
       }
 
-      // Conectar usando a relação
       createData.coupon = {
         connect: { code: data.couponCode },
       };
-    } else {
-      // Não definir nada para coupon quando não houver cupom
-      // O Prisma automaticamente definirá como NULL
     }
 
-    // 4. Criar o carrinho
     try {
       const cart = await this.prisma.cart.create({
         data: createData,
