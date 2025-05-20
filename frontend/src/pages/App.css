@@ -1,0 +1,126 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.card {
+  padding: 15px;
+  background-color: #432e56;
+  text-align: center;
+  width: 200px;
+}
+
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.image-container {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.products-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  
+}
+
+.name {
+  color: #b98dc2;
+  font-size: 1.5em;
+  margin: 10px 0;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.price {
+  color: #d4b3da;
+  font-size: 1.3em;
+  margin: 10px 0;
+}
+
+.quantity-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.quantity-button {
+  background-color: #432e56;
+  align-items: center;
+  color: #b98dc2;
+  border: 2px solid #b98dc2;
+  width: 30px;
+  height: 30px;
+  font-family: "VT323", monospace;
+  font-size: 1.2em;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #b98dc2;
+}
+
+.quantity {
+  color: #b98dc2;
+  font-size: 1.4em;
+  min-width: 20px;
+}
+
+.add-button {
+  background-color: #432e56;
+  color: #b98dc2;
+  border: 3px solid #b98dc2;
+  padding: 8px;
+  font-family: "VT323", monospace;
+  font-size: 1em;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 0;
+  box-shadow: 3px 3px 0px #b98dc2;
+  transition: all 0.1s;
+}
+
+.main-button {
+  padding: 8px 16px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}

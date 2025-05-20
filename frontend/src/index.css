@@ -1,68 +1,84 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: "VT323", monospace;
   font-weight: 400;
+  font-size: 20px;
+  line-height: 1;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: #b98dc2;
+  background-color: #432e56;
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: #b98dc2;
+  text-decoration: none;
+  border-bottom: 2px solid #b98dc2;
 }
 a:hover {
-  color: #535bf2;
+  color: #d4b3da;
+  border-bottom-color: #d4b3da;
 }
 
 body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
   min-height: 100vh;
+  background-color: #432e56;
+  image-rendering: pixelated;
 }
 
+h1,
+h2,
+h3 {
+  color: #b98dc2;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 3em;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #432e56;
+  color: #b98dc2;
+  border: 3px solid #b98dc2;
+  font-family: "VT323", monospace;
+  font-size: 1.5em;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+  border-radius: 0;
+  box-shadow: 4px 4px 0px #b98dc2;
+  transition: all 0.1s ease-out;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+button:hover {
+  background-color: #b98dc2;
+  color: #432e56;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #b98dc2;
+}
+
+button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+button:focus {
+  outline: none;
+  animation: glitch 0.3s linear;
+}
+@keyframes glitch {
+  0% {
+    transform: translate(0);
   }
-  a:hover {
-    color: #747bff;
+  20% {
+    transform: translate(-2px, 2px);
   }
-  button {
-    background-color: #f9f9f9;
+  40% {
+    transform: translate(2px, -2px);
+  }
+  60% {
+    transform: translate(0);
   }
 }
