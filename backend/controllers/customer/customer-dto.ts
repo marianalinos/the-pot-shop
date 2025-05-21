@@ -1,14 +1,14 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 export interface CreateCustomerDTO {
-  name: string;
+  customer_name: string;
   email: string;
   password: string;
   wallet: Decimal;
 }
 export interface UpdateCustomerDTO {
-  id: number;
-  name: string;
+  customer_id: number;
+  customer_name: string;
   email: string;
   password: string;
   wallet: Decimal;

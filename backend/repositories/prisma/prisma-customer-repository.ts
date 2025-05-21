@@ -12,20 +12,20 @@ export class PrismaCustomerRepository implements CustomerRepository {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async create(customer: CreateCustomerDTO): Promise<void> {
+  async create(data: CreateCustomerDTO): Promise<void> {
     await this.prisma.customer.create({
       data: {
-        name: customer.name,
-        email: customer.email,
-        password: customer.password,
-        wallet: customer.wallet,
+        customer_name: data.customer_name,
+        email: data.email,
+        password: data.password,
+        wallet: data.wallet,
       },
     });
   }
-  async findById(id: number): Promise<Customer | null> {
+  async findById(customer_id: number): Promise<Customer | null> {
     const customer = await this.prisma.customer.findFirst({
       where: {
-        id: id,
+        customer_id: customer_id,
       },
     });
 
@@ -34,54 +34,54 @@ export class PrismaCustomerRepository implements CustomerRepository {
     }
 
     return new Customer(
-      customer.id,
-      customer.name,
+      customer.customer_id,
+      customer.customer_name,
       customer.email,
       customer.password,
       customer.wallet
     );
   }
-  async read(id: number | undefined): Promise<Customer[]> {
+  async read(type: number | undefined): Promise<Customer[]> {
     const customers = await this.prisma.customer.findMany({
       where: {
-        id: id,
+        customer_id: type,
       },
     });
     return customers.map(
       (customer) =>
         new Customer(
-          customer.id,
-          customer.name,
+          customer.customer_id,
+          customer.customer_name,
           customer.email,
           customer.password,
           customer.wallet
         )
     );
   }
-  async update(customer: UpdateCustomerDTO): Promise<Customer> {
+  async update(data: UpdateCustomerDTO): Promise<Customer> {
     const updatedCustomer = await this.prisma.customer.update({
       where: {
-        id: customer.id,
+        customer_id: data.customer_id,
       },
       data: {
-        name: customer.name,
-        email: customer.email,
-        password: customer.password,
-        wallet: customer.wallet
+        customer_name: data.customer_name,
+        email: data.email,
+        password: data.password,
+        wallet: data.wallet
       },
     });
     return new Customer(
-        updatedCustomer.id,
-        updatedCustomer.name,
+        updatedCustomer.customer_id,
+        updatedCustomer.customer_name,
         updatedCustomer.email,
         updatedCustomer.password,
         updatedCustomer.wallet
     );
   }
-  async delete(id: number): Promise<void> {
+  async delete(customer_id: number): Promise<void> {
     await this.prisma.customer.delete({
       where: {
-        id: id,
+        customer_id: customer_id,
       },
     });
   }

@@ -3,10 +3,10 @@ import { CreateCartDTO, UpdateCartDTO } from "../controllers/cart/cart-dto";
 import { Decimal } from "@prisma/client/runtime/library";
 
 export interface CartRepository {
-  create(cart: CreateCartDTO): Promise<Cart>;
+  create(data: CreateCartDTO): Promise<Cart>;
   read(type: number | undefined): Promise<Cart[]>;
-  findById(id: number): Promise<Cart | null>;
-  update(cart: UpdateCartDTO): Promise<Cart>;
-  delete(id: number): Promise<void>;
-  calculateTotal(id: number): Promise<Decimal>;
+  findById(cart_id: number): Promise<Cart | null>;
+  update(data: UpdateCartDTO): Promise<Cart>;
+  delete(cart_id: number): Promise<void>;
+  calculateTotal(cart_id: number): Promise<Decimal>;
 }

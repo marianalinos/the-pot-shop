@@ -45,14 +45,6 @@
   margin-bottom: 10px;
 }
 
-.products-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  
-}
-
 .name {
   color: #b98dc2;
   font-size: 1.5em;

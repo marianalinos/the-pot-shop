@@ -11,46 +11,46 @@ export class InMemoryCustomerRepository implements CustomerRepository {
   constructor(customers: Customer[] = []) {
     this.customers = customers;
   }
-  async create(customer: CreateCustomerDTO): Promise<void> {
+  async create(data: CreateCustomerDTO): Promise<void> {
     const newCustomer = new Customer(
       this.customers.length + 1,
-      customer.name,
-      customer.email,
-      customer.password,
-      customer.wallet
+      data.customer_name,
+      data.email,
+      data.password,
+      data.wallet
     );
     this.customers.push(newCustomer);
   }
-  async read(id: number | undefined): Promise<Customer[]> {
-    if (id) {
+  async read(type: number | undefined): Promise<Customer[]> {
+    if (type) {
       const customers = this.customers.filter(
-        (customer) => customer.getId() === id
+        (customer) => customer.getId() === type
       );
       return customers;
     }
     return this.customers;
   }
-  async findById(id: number): Promise<Customer | null> {
-    const customer = this.customers.find((customer) => customer.getId() === id);
+  async findById(customer_id: number): Promise<Customer | null> {
+    const customer = this.customers.find((customer) => customer.getId() === customer_id);
     return customer ?? null;
   }
-  async update(customer: UpdateCustomerDTO): Promise<Customer> {
+  async update(data: UpdateCustomerDTO): Promise<Customer> {
     const index = this.customers.findIndex(
-      (customerRepo) => customerRepo.getId() === customer.id
+      (customerRepo) => customerRepo.getId() === data.customer_id
     );
     const newCustomer = new Customer(
-      customer.id,
-      customer.name,
-      customer.email,
-      customer.password,
-      customer.wallet
+      data.customer_id,
+      data.customer_name,
+      data.email,
+      data.password,
+      data.wallet
     );
     this.customers[index] = newCustomer;
     return newCustomer;
   }
-  async delete(id: number): Promise<void> {
+  async delete(customer_id: number): Promise<void> {
     const index = this.customers.findIndex(
-      (customer) => customer.getId() === id
+      (customer) => customer.getId() === customer_id
     );
     this.customers.splice(index, 1);
   }

@@ -16,23 +16,23 @@ export class PrismaCartRepository implements CartRepository {
       total: 0,
     };
 
-    if (data.customerId) {
+    if (data.customer_id) {
       createData.customer = {
-        connect: { id: data.customerId },
+        connect: { customer_id: data.customer_id },
       };
     }
 
-    if (data.couponCode && data.couponCode !== "null") {
+    if (data.coupon_code && data.coupon_code !== "null") {
       const couponExists = await this.prisma.coupon.findUnique({
-        where: { code: data.couponCode },
+        where: { code: data.coupon_code },
       });
 
       if (!couponExists) {
-        throw new Error(`Cupom ${data.couponCode} não encontrado`);
+        throw new Error(`Cupom ${data.coupon_code} não encontrado`);
       }
 
       createData.coupon = {
-        connect: { code: data.couponCode },
+        connect: { code: data.coupon_code },
       };
     }
 
@@ -46,30 +46,30 @@ export class PrismaCartRepository implements CartRepository {
       });
 
       return new Cart(
-        cart.id,
+        cart.cart_id,
         cart.total,
         cart.coupon?.code || null,
-        cart.customer?.id || null
+        cart.customer?.customer_id || null
       );
     } catch (error) {
       console.error("Erro detalhado:", error);
       throw new Error("Falha ao criar carrinho. Verifique os dados.");
     }
   }
-  async read(id: number | undefined): Promise<Cart[]> {
+  async read(type: number | undefined): Promise<Cart[]> {
     const carts = await this.prisma.cart.findMany({
       where: {
-        id: id,
+        cart_id: type,
       },
     });
     return carts.map(
-      (cart) => new Cart(cart.id, cart.total, cart.couponCode, cart.customerId)
+      (cart) => new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
     );
   }
 
-  async findById(id: number): Promise<Cart | null> {
+  async findById(cart_id: number): Promise<Cart | null> {
     const cart = await this.prisma.cart.findUnique({
-      where: { id },
+      where: { cart_id },
       include: {
         products: {
           include: {
@@ -81,29 +81,29 @@ export class PrismaCartRepository implements CartRepository {
       },
     });
     return cart
-      ? new Cart(cart.id, cart.total, cart.couponCode, cart.customerId)
+      ? new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
       : null;
   }
 
   async update(data: UpdateCartDTO): Promise<Cart> {
     const cart = await this.prisma.cart.update({
-      where: { id: data.id },
+      where: { cart_id: data.cart_id },
       data: {
-        couponCode: data.couponCode === null ? null : data.couponCode,
-        customerId: data.customerId === null ? null : data.customerId,
+        coupon_code: data.coupon_code === null ? null : data.coupon_code,
+        customer_id: data.customer_id === null ? null : data.customer_id,
       },
     });
-    await this.calculateTotal(data.id);
-    return new Cart(cart.id, cart.total, cart.couponCode, cart.customerId);
+    await this.calculateTotal(data.cart_id);
+    return new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id);
   }
 
-  async delete(id: number): Promise<void> {
-    await this.prisma.cart.delete({ where: { id } });
+  async delete(cart_id: number): Promise<void> {
+    await this.prisma.cart.delete({ where: { cart_id } });
   }
 
-  async calculateTotal(id: number): Promise<Decimal> {
+  async calculateTotal(cart_id: number): Promise<Decimal> {
     const cart = await this.prisma.cart.findUnique({
-      where: { id },
+      where: { cart_id },
       include: {
         products: {
           include: {
@@ -126,7 +126,7 @@ export class PrismaCartRepository implements CartRepository {
       : subtotal;
 
     await this.prisma.cart.update({
-      where: { id },
+      where: { cart_id },
       data: { total },
     });
 

@@ -1,35 +1,35 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 export class Product {
-  private prod_id: number;
-  private prod_name: string;
-  private prod_price: Decimal;
-  private prod_image: string;
+  private product_id: number;
+  private product_name: string;
+  private price: Decimal;
+  private image: string;
 
   constructor(
-    prod_id: number,
-    prod_name: string,
-    prod_price: Decimal,
-    prod_image: string
+    product_id: number,
+    product_name: string,
+    price: Decimal,
+    image: string
   ) {
-    this.prod_id = prod_id;
-    this.prod_name = prod_name;
-    this.prod_price = prod_price;
-    this.prod_image = prod_image;
+    this.product_id = product_id;
+    this.product_name = product_name;
+    this.price = price;
+    this.image = image;
   }
 
   public getId(): number {
-    return this.prod_id;
+    return this.product_id;
   }
 
   public getName(): string {
-    return this.prod_name;
+    return this.product_name;
   }
 
   public getPrice(): Decimal {
-    return this.prod_price;
+    return this.price;
   }
   public getImage(): string {
-    return this.prod_image;
+    return this.image;
   }
 }

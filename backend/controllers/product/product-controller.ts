@@ -11,12 +11,12 @@ export class ProductController {
 
   async create(req: Request, res: Response) {
     try {
-      const createProductRequest: CreateProductDTO = {
-        name: String(req.body.name),
+      const createProduct: CreateProductDTO = {
+        product_name: String(req.body.name),
         price: Decimal(req.body.price),
         image: String(req.body.image),
       };
-      await this.repository.create(createProductRequest);
+      await this.repository.create(createProduct);
       return res.status(201).send();
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -24,9 +24,9 @@ export class ProductController {
   }
   async read(req: Request, res: Response): Promise<Response> {
     try {
-      const id = req.query.id as string;
+      const product_id = req.query.product_id as string;
       const products = await this.repository.read(
-        isNaN(Number(id)) || Number(id) == 0 ? undefined : Number(id)
+        isNaN(Number(product_id)) || Number(product_id) == 0 ? undefined : Number(product_id)
       );
       return res.status(200).json(products);
     } catch (error: any) {
@@ -35,8 +35,8 @@ export class ProductController {
   }
   async findById(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
-      const product = await this.repository.findById(Number(id));
+      const { product_id } = req.params;
+      const product = await this.repository.findById(Number(product_id));
       return res.status(200).json(product);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -44,13 +44,13 @@ export class ProductController {
   }
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const updateProductRequest: UpdateProductDTO = {
-        id: Number(req.params.id),
-        name: String(req.body.name),
+      const updateProduct: UpdateProductDTO = {
+        product_id: Number(req.params.product_id),
+        product_name: String(req.body.product_name),
         price: Decimal(req.body.price),
         image: String(req.body.image),
       };
-      const product = await this.repository.update(updateProductRequest);
+      const product = await this.repository.update(updateProduct);
       return res.status(200).json(product);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -58,12 +58,12 @@ export class ProductController {
   }
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const deleteUserRequest = {
-        id: Number(req.params.id),
+      const deleteProduct = {
+        product_id: Number(req.params.product_id),
       };
-      await this.repository.delete(deleteUserRequest.id);
+      await this.repository.delete(deleteProduct.product_id);
 
-      return res.status(200).json(deleteUserRequest);
+      return res.status(200).json(deleteProduct);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }

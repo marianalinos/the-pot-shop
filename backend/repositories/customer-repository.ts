@@ -5,9 +5,9 @@ import {
 } from "../controllers/customer/customer-dto";
 
 export interface CustomerRepository {
-  create(customer: CreateCustomerDTO): Promise<void>;
-  read(id: number | undefined): Promise<Customer[]>;
-  findById(id: number): Promise<Customer | null>;
-  update(customer: UpdateCustomerDTO): Promise<Customer>;
-  delete(id: number): Promise<void>;
+  create(data: CreateCustomerDTO): Promise<void>;
+  read(type: number | undefined): Promise<Customer[]>;
+  findById(customer_id: number): Promise<Customer | null>;
+  update(data: UpdateCustomerDTO): Promise<Customer>;
+  delete(customer_id: number): Promise<void>;
 }

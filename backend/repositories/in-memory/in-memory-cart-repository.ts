@@ -19,28 +19,28 @@ export class InMemoryCartRepository implements CartRepository {
     const newCart = new Cart(
       this.currentId++,
       new Decimal(0),
-      data.couponCode || null,
-      data.customerId || null
+      data.coupon_code || null,
+      data.customer_id || null
     );
 
     this.carts.push(newCart);
     return newCart;
   }
 
-  async read(id?: number): Promise<Cart[]> {
-    if (id) {
-      return this.carts.filter((c) => c.getId() === id);
+  async read(type?: number): Promise<Cart[]> {
+    if (type) {
+      return this.carts.filter((c) => c.getId() === type);
     }
     return this.carts;
   }
 
-  async findById(id: number): Promise<Cart | null> {
-    const cart = this.carts.find((c) => c.getId() === id);
+  async findById(cart_id: number): Promise<Cart | null> {
+    const cart = this.carts.find((c) => c.getId() === cart_id);
     return cart ? cart : null;
   }
 
   async update(data: UpdateCartDTO): Promise<Cart> {
-    const index = this.carts.findIndex((c) => c.getId() === data.id);
+    const index = this.carts.findIndex((c) => c.getId() === data.cart_id);
 
     if (index === -1) {
       throw new Error("Cart not found");
@@ -50,11 +50,11 @@ export class InMemoryCartRepository implements CartRepository {
     const updatedCart = new Cart(
       existingCart.getId(),
       existingCart.getTotal(),
-      data.couponCode !== undefined
-        ? data.couponCode
+      data.coupon_code !== undefined
+        ? data.coupon_code  
         : existingCart.getCouponCode(),
-      data.customerId !== undefined
-        ? data.customerId
+      data.customer_id !== undefined
+        ? data.customer_id
         : existingCart.getCustomerId()
     );
 
@@ -62,12 +62,12 @@ export class InMemoryCartRepository implements CartRepository {
     return updatedCart;
   }
 
-  async delete(id: number): Promise<void> {
-    this.carts = this.carts.filter((c) => c.getId() !== id);
+  async delete(cart_id: number): Promise<void> {
+    this.carts = this.carts.filter((c) => c.getId() !== cart_id);
   }
 
-  async calculateTotal(id: number): Promise<Decimal> {
-    const cart = this.carts.find((c) => c.getId() === id);
+  async calculateTotal(cart_id: number): Promise<Decimal> {
+    const cart = this.carts.find((c) => c.getId() === cart_id);
     if (!cart) {
       throw new Error("Cart not found");
     }

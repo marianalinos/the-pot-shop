@@ -12,15 +12,15 @@ datasource db {
 }
 
 model Product {
-  id           Int           @id @unique @default(autoincrement())
-  name         String
-  price        Decimal       @db.Decimal(10, 2)
-  image        String
-  cartProducts CartProduct[]
+  product_id    Int           @id @unique @default(autoincrement())
+  product_name  String
+  price         Decimal       @db.Decimal(10, 2)
+  image         String
+  cart_products CartProduct[]
 }
 
 model Coupon {
-  id         Int       @id @unique @default(autoincrement())
+  coupon_id  Int       @id @unique @default(autoincrement())
   code       String    @unique
   discount   Decimal   @db.Decimal(10, 2)
   expiration DateTime?
@@ -29,48 +29,48 @@ model Coupon {
 }
 
 model Customer {
-  id       Int     @id @unique @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String
-  wallet   Decimal @db.Decimal(10, 2)
-  orders   Order[]
-  carts    Cart[]
+  customer_id   Int     @id @unique @default(autoincrement())
+  customer_name String
+  email         String  @unique
+  password      String
+  wallet        Decimal @db.Decimal(10, 2)
+  orders        Order[]
+  carts         Cart[]
 }
 
 model Cart {
-  id         Int           @id @unique @default(autoincrement())
-  total      Decimal       @db.Decimal(10, 2)
-  products   CartProduct[]
-  coupon     Coupon?       @relation(fields: [couponCode], references: [code], onDelete: SetNull)
-  couponCode String?
-  order      Order?
-  customer   Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  customerId Int?
+  cart_id     Int           @id @unique @default(autoincrement())
+  total       Decimal       @db.Decimal(10, 2)
+  products    CartProduct[]
+  coupon      Coupon?       @relation(fields: [coupon_code], references: [code], onDelete: SetNull)
+  coupon_code String?
+  order       Order?
+  customer    Customer?     @relation(fields: [customer_id], references: [customer_id], onDelete: SetNull)
+  customer_id Int?
 }
 
 model CartProduct {
-  id        Int     @id @unique @default(autoincrement())
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  cartId    Int
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-  quantity  Int     @default(1)
+  cart_product_id Int     @id @unique @default(autoincrement())
+  cart            Cart    @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade)
+  cart_id         Int
+  product         Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
+  product_id      Int
+  quantity        Int     @default(1)
 }
 
 model Order {
-  id         Int         @id @default(autoincrement())
-  createdAt  DateTime    @default(now())
-  status     OrderStatus @default(PENDING)
-  total      Decimal     @db.Decimal(10, 2)
-  customer   Customer?   @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  customerId Int?
-  cart       Cart        @relation(fields: [cartId], references: [id])
-  cartId     Int         @unique
+  order_id    Int         @id @default(autoincrement())
+  created_at  DateTime    @default(now())
+  status      OrderStatus @default(PENDENTE)
+  total       Decimal     @db.Decimal(10, 2)
+  customer    Customer?   @relation(fields: [customer_id], references: [customer_id], onDelete: SetNull)
+  customer_id Int?
+  cart        Cart        @relation(fields: [cart_id], references: [cart_id])
+  cart_id     Int         @unique
 }
 
 enum OrderStatus {
-  PENDING
-  COMPLETED
-  CANCELLED
+  PENDENTE
+  FINALIZADO
+  CANCELADO
 }

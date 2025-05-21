@@ -7,11 +7,11 @@ export class CartController {
 
   async create(req: Request, res: Response) {
     try {
-      const createCartRequest: CreateCartDTO = {
-        couponCode: String(req.body.couponCode),
-        customerId: Number(req.body.customerId),
+      const createCart: CreateCartDTO = {
+        coupon_code: String(req.body.coupon_code),
+        customer_id: Number(req.body.customer_id),
       };
-      await this.repository.create(createCartRequest);
+      await this.repository.create(createCart);
       return res.status(201).send();
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -20,9 +20,9 @@ export class CartController {
 
   async read(req: Request, res: Response): Promise<Response> {
     try {
-      const id = req.query.id as string;
+      const cart_id = req.query.cart_id as string;
       const carts = await this.repository.read(
-        isNaN(Number(id)) || Number(id) == 0 ? undefined : Number(id)
+        isNaN(Number(cart_id)) || Number(cart_id) == 0 ? undefined : Number(cart_id)
       );
       return res.status(200).json(carts);
     } catch (error: any) {
@@ -32,7 +32,7 @@ export class CartController {
 
   async findById(req: Request, res: Response) {
     try {
-      const cart = await this.repository.findById(Number(req.params.id));
+      const cart = await this.repository.findById(Number(req.params.cart_id));
       return cart
         ? res.status(200).json(cart)
         : res.status(404).json({ message: "Cart not found" });
@@ -43,12 +43,12 @@ export class CartController {
 
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const updateCartRequest: UpdateCartDTO = {
-        id: Number(req.params.id),
-        couponCode: String(req.body.couponCode),
-        customerId: Number(req.body.customerId),
+      const updateCart: UpdateCartDTO = {
+        cart_id: Number(req.params.cart_id),
+        coupon_code: String(req.body.coupon_code),
+        customer_id: Number(req.body.customer_id),
       };
-      const cart = await this.repository.update(updateCartRequest);
+      const cart = await this.repository.update(updateCart);
       return res.status(200).json(cart);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -57,7 +57,7 @@ export class CartController {
 
   async delete(req: Request, res: Response) {
     try {
-      await this.repository.delete(Number(req.params.id));
+      await this.repository.delete(Number(req.params.cart_id));
       return res.status(204).send();
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -66,8 +66,8 @@ export class CartController {
 
   async calculateTotal(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-      const total = await this.repository.calculateTotal(Number(id));
+      const { cart_id } = req.params;
+      const total = await this.repository.calculateTotal(Number(cart_id));
       return res.status(200).json({ total });
     } catch (error: any) {
       return res.status(400).json({ message: error.message });

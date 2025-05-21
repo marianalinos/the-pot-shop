@@ -9,19 +9,19 @@ export class PrismaProductRepository implements ProductRepository {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async create(product: CreateProductDTO): Promise<void> {
+  async create(data: CreateProductDTO): Promise<void> {
     await this.prisma.product.create({
       data: {
-        name: product.name,
-        price: product.price,
-        image: product.image,
+        product_name: data.product_name,
+        price: data.price,
+        image: data.image,
       },
     });
   }
-  async findById(id: number): Promise<Product | null> {
+  async findById(type: number): Promise<Product | null> {
     const product = await this.prisma.product.findFirst({
       where: {
-        id: id,
+        product_id: type,
       },
     });
 
@@ -29,41 +29,41 @@ export class PrismaProductRepository implements ProductRepository {
       return null;
     }
 
-    return new Product(product.id, product.name, product.price, product.image);
+    return new Product(product.product_id, product.product_name, product.price, product.image);
   }
-  async read(id: number | undefined): Promise<Product[]> {
+  async read(type: number | undefined): Promise<Product[]> {
     const products = await this.prisma.product.findMany({
       where: {
-        id: id,
+        product_id: type,
       },
     });
     return products.map(
       (product) =>
-        new Product(product.id, product.name, product.price, product.image)
+        new Product(product.product_id, product.product_name, product.price, product.image)
     );
   }
-  async update(product: UpdateProductDTO): Promise<Product> {
+  async update(data: UpdateProductDTO): Promise<Product> {
     const updatedProduct = await this.prisma.product.update({
       where: {
-        id: product.id,
+        product_id: data.product_id,
       },
       data: {
-        name: product.name,
-        price: product.price,
-        image: product.image,
+        product_name: data.product_name,
+        price: data.price,
+        image: data.image,
       },
     });
     return new Product(
-      updatedProduct.id,
-      updatedProduct.name,
+      updatedProduct.product_id,
+      updatedProduct.product_name,
       updatedProduct.price,
       updatedProduct.image
     );
   }
-  async delete(id: number): Promise<void> {
+  async delete(product_id: number): Promise<void> {
     await this.prisma.product.delete({
       where: {
-        id: id,
+        product_id: product_id,
       },
     });
   }

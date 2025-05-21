@@ -14,10 +14,10 @@ export class OrderController {
 
   async create(req: Request, res: Response) {
     try {
-      const { cartId } = req.body;
+      const { cart_id } = req.body;
       
       const cart = await this.prisma.cart.findUnique({
-        where: { id: Number(cartId) },
+        where: { cart_id: Number(cart_id) },
         include: {
           products: {
             include: {
@@ -32,12 +32,12 @@ export class OrderController {
         return res.status(404).json({ message: "Cart not found" });
       }
 
-      const createOrderRequest: CreateOrderDTO = {
+      const createOrder: CreateOrderDTO = {
         status: req.body.status,
-        cartId: Number(cartId),
+        cart_id: Number(cart_id),
       };
 
-      const order = await this.repository.create(createOrderRequest);
+      const order = await this.repository.create(createOrder);
       return res.status(201).json(order);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -46,9 +46,9 @@ export class OrderController {
 
   async read(req: Request, res: Response): Promise<Response> {
     try {
-      const id = req.query.id as string;
+      const order_id = req.query.order_id as string;
       const orders = await this.repository.read(
-        isNaN(Number(id)) || Number(id) == 0 ? undefined : Number(id)
+        isNaN(Number(order_id)) || Number(order_id) == 0 ? undefined : Number(order_id)
       );
       return res.status(200).json(orders);
     } catch (error: any) {
@@ -58,8 +58,8 @@ export class OrderController {
 
   async findById(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
-      const order = await this.repository.findById(Number(id));
+      const { order_id } = req.params;
+      const order = await this.repository.findById(Number(order_id));
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
@@ -71,12 +71,12 @@ export class OrderController {
 
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const updateOrderRequest: UpdateOrderDTO = {
-        id: Number(req.params.id),
+      const updateOrder: UpdateOrderDTO = {
+        order_id: Number(req.params.order_id),
         status: req.body.status,
       };
 
-      const order = await this.repository.update(updateOrderRequest);
+      const order = await this.repository.update(updateOrder);
       return res.status(200).json(order);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -85,11 +85,11 @@ export class OrderController {
 
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const deleteOrderRequest = {
-        id: Number(req.params.id),
+      const deleteOrder = {
+        order_id: Number(req.params.order_id),
       };
-      await this.repository.delete(deleteOrderRequest.id);
-      return res.status(200).json(deleteOrderRequest);
+      await this.repository.delete(deleteOrder.order_id);
+      return res.status(200).json(deleteOrder);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }

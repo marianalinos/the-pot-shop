@@ -2,10 +2,10 @@ import { OrderStatus } from "@prisma/client";
 
 export interface CreateOrderDTO {
   status?: OrderStatus;
-  cartId: number;
+  cart_id: number;
 }
 
 export interface UpdateOrderDTO {
-  id: number;
+  order_id: number;
   status: OrderStatus;
 }

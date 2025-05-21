@@ -2,9 +2,9 @@ import { Decimal } from "@prisma/client/runtime/library";
 
 export class Cart {
   private cart_id: number;
-  private cart_total: Decimal;
-  private cart_couponCode: string | null;
-  private cart_customerId: number | null;
+  private total: Decimal;
+  private coupon_code: string | null;
+  private customer_id: number | null;
 
   constructor(
     id: number,
@@ -13,9 +13,9 @@ export class Cart {
     customerId: number | null = null
   ) {
     this.cart_id = id;
-    this.cart_total = total;
-    this.cart_couponCode = couponCode;
-    this.cart_customerId = customerId;
+    this.total = total;
+    this.coupon_code = couponCode;
+    this.customer_id = customerId;
   }
 
   public getId(): number {
@@ -23,18 +23,18 @@ export class Cart {
   }
 
   public getTotal(): Decimal {
-    return this.cart_total;
+    return this.total;
   }
 
   public setTotal(total: Decimal): void {
-    this.cart_total = total;
+    this.total = total;
   }
 
   public getCouponCode(): string | null {
-    return this.cart_couponCode;
+    return this.coupon_code;
   }
 
   public getCustomerId(): number | null {
-    return this.cart_customerId;
+    return this.customer_id;
   }
 }

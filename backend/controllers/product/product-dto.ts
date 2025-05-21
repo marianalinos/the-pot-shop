@@ -1,13 +1,13 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
 export interface CreateProductDTO {
-	name: string;
+	product_name: string;
 	price: Decimal;
 	image: string;
 }
 export interface UpdateProductDTO {
-    id: number;
-    name: string;
+    product_id: number;
+    product_name: string;
     price: Decimal;
     image: string;
 }

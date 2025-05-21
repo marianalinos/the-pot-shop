@@ -5,10 +5,10 @@ import {
 } from "../controllers/coupon/coupon-dto";
 
 export interface CouponRepository {
-  create(coupon: CreateCouponDTO): Promise<void>;
-  read(id: number | undefined): Promise<Coupon[]>;
-  findById(id: number): Promise<Coupon | null>;
+  create(data: CreateCouponDTO): Promise<void>;
+  read(type: number | undefined): Promise<Coupon[]>;
+  findById(coupon_id: number): Promise<Coupon | null>;
   findByCode(code: string): Promise<Coupon | null>;
-  update(coupon: UpdateCouponDTO): Promise<Coupon>;
-  delete(id: number): Promise<void>;
+  update(data: UpdateCouponDTO): Promise<Coupon>;
+  delete(coupon_id: number): Promise<void>;
 }

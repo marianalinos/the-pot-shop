@@ -5,9 +5,9 @@ import {
 } from "../controllers/product/product-dto";
 
 export interface ProductRepository {
-  create(product: CreateProductDTO): Promise<void>;
+  create(data: CreateProductDTO): Promise<void>;
   read(type: number | undefined): Promise<Product[]>;
-  findById(id: number): Promise<Product | null>;
-  update(product: UpdateProductDTO): Promise<Product>;
-  delete(id: number): Promise<void>;
+  findById(product_id: number): Promise<Product | null>;
+  update(data: UpdateProductDTO): Promise<Product>;
+  delete(product_id: number): Promise<void>;
 }

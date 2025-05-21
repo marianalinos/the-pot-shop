@@ -12,26 +12,26 @@ export class InMemoryCouponRepository implements CouponRepository {
     this.coupons = coupons;
   }
 
-  async create(coupon: CreateCouponDTO): Promise<void> {
+  async create(data: CreateCouponDTO): Promise<void> {
     const newCoupon = new Coupon(
       this.coupons.length + 1,
-      coupon.code,
-      coupon.discount,
-      coupon.expiration ? new Date(coupon.expiration) : null,
-      coupon.used ?? false
+      data.code,
+      data.discount,
+      data.expiration ? new Date(data.expiration) : null,
+      data.used ?? false
     );
     this.coupons.push(newCoupon);
   }
 
-  async read(id?: number): Promise<Coupon[]> {
-    if (id !== undefined) {
-      return this.coupons.filter((c) => c.getId() === id);
+  async read(type?: number): Promise<Coupon[]> {
+    if (type !== undefined) {
+      return this.coupons.filter((c) => c.getId() === type);
     }
     return this.coupons;
   }
 
-  async findById(id: number): Promise<Coupon | null> {
-    const coupon = this.coupons.find((c) => c.getId() === id);
+  async findById(coupon_id: number): Promise<Coupon | null> {
+    const coupon = this.coupons.find((c) => c.getId() === coupon_id);
     return coupon ?? null;
   }
 
@@ -40,24 +40,24 @@ export class InMemoryCouponRepository implements CouponRepository {
     return coupon ?? null;
   }
 
-  async update(coupon: UpdateCouponDTO): Promise<Coupon> {
-    const index = this.coupons.findIndex((c) => c.getId() === coupon.id);
+  async update(data: UpdateCouponDTO): Promise<Coupon> {
+    const index = this.coupons.findIndex((c) => c.getId() === data.coupon_id);
     if (index === -1) throw new Error("Coupon not found");
 
     const updatedCoupon = new Coupon(
-      coupon.id,
-      coupon.code,
-      coupon.discount,
-      coupon.expiration ? new Date(coupon.expiration) : null,
-      coupon.used ?? false
+      data.coupon_id,
+      data.code,
+      data.discount,
+      data.expiration ? new Date(data.expiration) : null,
+      data.used ?? false
     );
 
     this.coupons[index] = updatedCoupon;
     return updatedCoupon;
   }
 
-  async delete(id: number): Promise<void> {
-    const index = this.coupons.findIndex((c) => c.getId() === id);
+  async delete(coupon_id: number): Promise<void> {
+    const index = this.coupons.findIndex((c) => c.getId() === coupon_id);
     if (index !== -1) {
       this.coupons.splice(index, 1);
     }

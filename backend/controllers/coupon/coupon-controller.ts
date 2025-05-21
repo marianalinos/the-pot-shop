@@ -12,7 +12,7 @@ export class CouponController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const createCouponRequest: CreateCouponDTO = {
+      const createCoupon: CreateCouponDTO = {
         code: String(req.body.code),
         discount: new Decimal(req.body.discount),
         expiration: req.body.expiration
@@ -21,7 +21,7 @@ export class CouponController {
         used: req.body.used ?? false,
       };
 
-      await this.repository.create(createCouponRequest);
+      await this.repository.create(createCoupon);
       return res.status(201).send();
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -30,9 +30,9 @@ export class CouponController {
 
   async read(req: Request, res: Response): Promise<Response> {
     try {
-      const id = req.query.id as string;
+      const coupon_id = req.query.coupon_id as string;
       const coupons = await this.repository.read(
-        isNaN(Number(id)) || Number(id) === 0 ? undefined : Number(id)
+        isNaN(Number(coupon_id)) || Number(coupon_id) === 0 ? undefined : Number(coupon_id)
       );
       return res.status(200).json(coupons);
     } catch (error: any) {
@@ -42,8 +42,8 @@ export class CouponController {
 
   async findById(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
-      const coupon = await this.repository.findById(Number(id));
+      const { coupon_id } = req.params;
+      const coupon = await this.repository.findById(Number(coupon_id));
       return res.status(200).json(coupon);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -62,8 +62,8 @@ export class CouponController {
 
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const updateCouponRequest: UpdateCouponDTO = {
-        id: Number(req.params.id),
+      const updateCoupon: UpdateCouponDTO = {
+        coupon_id: Number(req.params.coupon_id),
         code: String(req.body.code),
         discount: new Decimal(req.body.discount),
         expiration: req.body.expiration
@@ -72,7 +72,7 @@ export class CouponController {
         used: req.body.used ?? false,
       };
 
-      const updatedCoupon = await this.repository.update(updateCouponRequest);
+      const updatedCoupon = await this.repository.update(updateCoupon);
       return res.status(200).json(updatedCoupon);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -81,9 +81,9 @@ export class CouponController {
 
   async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const id = Number(req.params.id);
-      await this.repository.delete(id);
-      return res.status(200).json({ id });
+      const coupon_id = Number(req.params.coupon_id);
+      await this.repository.delete(coupon_id);
+      return res.status(200).json({ coupon_id });
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }

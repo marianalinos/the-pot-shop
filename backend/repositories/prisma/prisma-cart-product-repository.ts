@@ -16,67 +16,67 @@ export class PrismaCartProductRepository implements CartProductRepository {
   async create(data: CreateCartProductDTO): Promise<CartProduct> {
     const cartProduct = await this.prisma.cartProduct.create({
       data: {
-        cartId: data.cartId,
-        productId: data.productId,
+        cart_id: data.cart_id,
+        product_id: data.product_id,
         quantity: data.quantity,
       },
     });
     return new CartProduct(
-      cartProduct.id,
-      cartProduct.cartId,
-      cartProduct.productId,
+      cartProduct.cart_product_id,
+      cartProduct.cart_id,
+      cartProduct.product_id,
       cartProduct.quantity
     );
   }
 
-  async read(id: number | undefined): Promise<CartProduct[]> {
+  async read(type: number | undefined): Promise<CartProduct[]> {
     const cartProducts = await this.prisma.cartProduct.findMany({
       where: {
-        id: id,
+        cart_product_id: type,
       },
     });
     return cartProducts.map(
       (cartProduct) =>
         new CartProduct(
-          cartProduct.id,
-          cartProduct.cartId,
-          cartProduct.productId,
+          cartProduct.cart_product_id,
+          cartProduct.cart_id,
+          cartProduct.product_id,
           cartProduct.quantity
         )
     );
   }
 
-  async findById(id: number): Promise<CartProduct | null> {
+  async findById(cart_product_id: number): Promise<CartProduct | null> {
     const cartProduct = await this.prisma.cartProduct.findUnique({
-      where: { id },
+      where: { cart_product_id },
     });
     if (!cartProduct) return null;
     return new CartProduct(
-      cartProduct.id,
-      cartProduct.cartId,
-      cartProduct.productId,
+      cartProduct.cart_product_id,
+      cartProduct.cart_id,
+      cartProduct.product_id,
       cartProduct.quantity
     );
   }
 
   async update(data: UpdateCartProductDTO): Promise<CartProduct> {
     const cartProduct = await this.prisma.cartProduct.update({
-      where: { id: data.id },
+      where: { cart_product_id: data.cart_product_id },
       data: {
         quantity: data.quantity,
       },
     });
     return new CartProduct(
-      cartProduct.id,
-      cartProduct.cartId,
-      cartProduct.productId,
+      cartProduct.cart_product_id,
+      cartProduct.cart_id,
+      cartProduct.product_id,
       cartProduct.quantity
     );
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(cart_product_id: number): Promise<void> {
     await this.prisma.cartProduct.delete({
-      where: { id },
+      where: { cart_product_id },
     });
   }
 }

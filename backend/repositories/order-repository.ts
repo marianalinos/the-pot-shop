@@ -2,9 +2,9 @@ import { Order } from "../models/order";
 import { CreateOrderDTO, UpdateOrderDTO } from "../controllers/order/order-dto";
 
 export interface OrderRepository {
-  create(order: CreateOrderDTO): Promise<Order>;
-  read(id: number | undefined): Promise<Order[]>;
-  findById(id: number): Promise<Order | null>;
-  update(order: UpdateOrderDTO): Promise<Order>;
-  delete(id: number): Promise<void>;
+  create(data: CreateOrderDTO): Promise<Order>;
+  read(type: number | undefined): Promise<Order[]>;
+  findById(order_id: number): Promise<Order | null>;
+  update(data: UpdateOrderDTO): Promise<Order>;
+  delete(order_id: number): Promise<void>;
 }

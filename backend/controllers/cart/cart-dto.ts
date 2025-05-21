@@ -1,10 +1,10 @@
 export interface CreateCartDTO {
-  couponCode?: string | null;
-  customerId?: number | null;
+  coupon_code?: string | null;
+  customer_id?: number | null;
 }
 
 export interface UpdateCartDTO {
-  id: number;
-  couponCode?: string | null;
-  customerId?: number | null;
+  cart_id: number;
+  coupon_code?: string | null;
+  customer_id?: number | null;
 }

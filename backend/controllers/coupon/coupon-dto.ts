@@ -7,7 +7,7 @@ export interface CreateCouponDTO {
     used?: boolean;
 }
 export interface UpdateCouponDTO {
-    id: number;
+    coupon_id: number;
     code: string;
     discount: Decimal;
     expiration?: string | Date;

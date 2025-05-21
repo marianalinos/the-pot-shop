@@ -1,30 +1,22 @@
 import { useState } from "react";
-
-type ProductCardProps = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  onAddToCart: (id: number, quantity: number) => void;
-};
+import type { Product } from "../api/products";
 
 export default function ProductCard({
-  id,
-  name,
+  product_id,
+  product_name,
   price,
   image,
-  onAddToCart,
-}: ProductCardProps) {
+}: Product) {
   const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = () => {
-    onAddToCart(id, quantity);
+    onAddToCart(product_id, quantity);
   };
 
   return (
     <div className="card">
       <div className="image-container">{image}</div>
-      <h3 className="name">{name}</h3>
+      <h3 className="name">{product_name}</h3>
       <p className="price">R$ {price.toFixed(2)}</p>
 
       <div className="quantity-container">

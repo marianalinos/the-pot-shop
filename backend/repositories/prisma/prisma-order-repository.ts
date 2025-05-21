@@ -5,7 +5,6 @@ import {
   CreateOrderDTO,
   UpdateOrderDTO,
 } from "../../controllers/order/order-dto";
-import { Decimal } from "@prisma/client/runtime/library";
 
 export class PrismaOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
@@ -14,10 +13,10 @@ export class PrismaOrderRepository implements OrderRepository {
     this.prisma = prisma;
   }
 
-  async create(order: CreateOrderDTO): Promise<Order> {
+  async create(data: CreateOrderDTO): Promise<Order> {
     // Get the cart to get its total
     const cart = await this.prisma.cart.findUnique({
-      where: { id: order.cartId },
+      where: { cart_id: data.cart_id },
     });
 
     if (!cart) {
@@ -26,47 +25,47 @@ export class PrismaOrderRepository implements OrderRepository {
 
     const createdOrder = await this.prisma.order.create({
       data: {
-        status: order.status || "PENDING",
+        status: data.status || "PENDENTE",
         total: cart.total, // Use the cart's total
-        customerId: cart.customerId,
-        cartId: order.cartId,
+        customer_id: cart.customer_id,
+        cart_id: data.cart_id,
       },
     });
 
     return new Order(
-      createdOrder.id,
-      createdOrder.createdAt,
+      createdOrder.order_id,
+      createdOrder.created_at,
       createdOrder.status,
       createdOrder.total,
-      createdOrder.customerId,
-      createdOrder.cartId
+      createdOrder.customer_id,
+      createdOrder.cart_id
     );
   }
   
-  async read(id: number | undefined): Promise<Order[]> {
+  async read(type: number | undefined): Promise<Order[]> {
     const orders = await this.prisma.order.findMany({
       where: {
-        id: id,
+        order_id: type,
       },
     });
 
     return orders.map(
       (order) =>
         new Order(
-          order.id,
-          order.createdAt,
+          order.order_id,
+          order.created_at,
           order.status,
           order.total,
-          order.customerId,
-          order.cartId
+          order.customer_id,
+          order.cart_id
         )
     );
   }
 
-  async findById(id: number): Promise<Order | null> {
+  async findById(order_id: number): Promise<Order | null> {
     const order = await this.prisma.order.findFirst({
       where: {
-        id: id,
+        order_id: order_id,
       },
     });
 
@@ -75,39 +74,39 @@ export class PrismaOrderRepository implements OrderRepository {
     }
 
     return new Order(
-      order.id,
-      order.createdAt,
+      order.order_id,
+      order.created_at,
       order.status,
       order.total,
-      order.customerId,
-      order.cartId
+      order.customer_id,
+      order.cart_id
     );
   }
 
-  async update(order: UpdateOrderDTO): Promise<Order> {
+  async update(data: UpdateOrderDTO): Promise<Order> {
     const updatedOrder = await this.prisma.order.update({
       where: {
-        id: order.id,
+        order_id: data.order_id,
       },
       data: {
-        status: order.status,
+        status: data.status,
       },
     });
 
     return new Order(
-      updatedOrder.id,
-      updatedOrder.createdAt,
+      updatedOrder.order_id,
+      updatedOrder.created_at,
       updatedOrder.status,
       updatedOrder.total,
-      updatedOrder.customerId,
-      updatedOrder.cartId
+      updatedOrder.customer_id,
+      updatedOrder.cart_id
     );
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(order_id: number): Promise<void> {
     await this.prisma.order.delete({
       where: {
-        id: id,
+        order_id: order_id,
       },
     });
   }

@@ -13,10 +13,10 @@ router.post("/", (req, res) => controller.create(req, res));
 // @ts-ignore
 router.get("/", (req, res) => controller.read(req, res));
 // @ts-ignore
-router.get("/:id", (req, res) => controller.findById(req, res));
+router.get("/:cart_product_id", (req, res) => controller.findById(req, res));
 // @ts-ignore
-router.put("/:id", (req, res) => controller.update(req, res));
+router.put("/:cart_product_id", (req, res) => controller.update(req, res));
 // @ts-ignore
-router.delete("/:id", (req, res) => controller.delete(req, res));
+router.delete("/:cart_product_id", (req, res) => controller.delete(req, res));
 
 export default router;

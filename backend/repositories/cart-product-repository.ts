@@ -7,7 +7,7 @@ import {
 export interface CartProductRepository {
   create(data: CreateCartProductDTO): Promise<CartProduct>;
   read(type: number | undefined): Promise<CartProduct[]>;
-  findById(id: number): Promise<CartProduct | null>;
+  findById(cart_product_id: number): Promise<CartProduct | null>;
   update(data: UpdateCartProductDTO): Promise<CartProduct>;
-  delete(id: number): Promise<void>;
+  delete(cart_product_id: number): Promise<void>;
 }

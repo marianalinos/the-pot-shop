@@ -11,43 +11,43 @@ export class InMemoryProductRepository implements ProductRepository {
   constructor(products: Product[] = []) {
     this.products = products;
   }
-  async create(product: CreateProductDTO): Promise<void> {
+  async create(data: CreateProductDTO): Promise<void> {
     const newProduct = new Product(
       this.products.length + 1,
-      product.name,
-      product.price,
-      product.image
+      data.product_name,
+      data.price,
+      data.image
     );
     this.products.push(newProduct);
   }
-  async read(id: number | undefined): Promise<Product[]> {
-    if (id) {
+  async read(type: number | undefined): Promise<Product[]> {
+    if (type) {
       const products = this.products.filter(
-        (product) => product.getId() === id
+        (product) => product.getId() === type
       );
       return products;
     }
     return this.products;
   }
-  async findById(id: number): Promise<Product | null> {
-    const product = this.products.find((product) => product.getId() === id);
+  async findById(product_id: number): Promise<Product | null> {
+    const product = this.products.find((product) => product.getId() === product_id);
     return product ?? null;
   }
-  async update(product: UpdateProductDTO): Promise<Product> {
+  async update(data: UpdateProductDTO): Promise<Product> {
     const index = this.products.findIndex(
-      (productRepo) => productRepo.getId() === product.id
+      (productRepo) => productRepo.getId() === data.product_id
     );
     const newProduct = new Product(
-      product.id,
-      product.name,
-      product.price,
-      product.image
+      data.product_id,
+      data.product_name,
+      data.price,
+      data.image
     );
     this.products[index] = newProduct;
     return newProduct;
   }
-  async delete(id: number): Promise<void> {
-    const index = this.products.findIndex((product) => product.getId() === id);
+  async delete(product_id: number): Promise<void> {
+    const index = this.products.findIndex((product) => product.getId() === product_id);
     this.products.splice(index, 1);
   }
 }

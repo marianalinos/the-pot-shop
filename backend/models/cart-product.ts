@@ -1,26 +1,26 @@
 export class CartProduct {
-  private id: number;
-  private cartId: number;
-  private productId: number;
+  private cart_product_id: number;
+  private cart_id: number;
+  private product_id: number;
   private quantity: number;
 
-  constructor(id: number, cartId: number, productId: number, quantity: number) {
-    this.id = id;
-    this.cartId = cartId;
-    this.productId = productId;
+  constructor(cart_product_id: number, cart_id: number, product_id: number, quantity: number) {
+    this.cart_product_id = cart_product_id;
+    this.cart_id = cart_id;
+    this.product_id = product_id;
     this.quantity = quantity;
   }
 
   public getId(): number {
-    return this.id;
+    return this.cart_product_id;
   }
 
   public getCartId(): number {
-    return this.cartId;
+    return this.cart_id;
   }
 
   public getProductId(): number {
-    return this.productId;
+    return this.product_id;
   }
 
   public getQuantity(): number {

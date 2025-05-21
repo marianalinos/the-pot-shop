@@ -13,37 +13,37 @@ export class PrismaCouponRepository implements CouponRepository {
     this.prisma = prisma;
   }
 
-  async create(coupon: CreateCouponDTO): Promise<void> {
+  async create(data: CreateCouponDTO): Promise<void> {
     await this.prisma.coupon.create({
       data: {
-        code: coupon.code,
-        discount: coupon.discount,
-        expiration: coupon.expiration,
-        used: coupon.used
+        code: data.code,
+        discount: data.discount,
+        expiration: data.expiration,
+        used: data.used,
       },
     });
   }
 
-  async read(id: number | undefined): Promise<Coupon[]> {
+  async read(type: number | undefined): Promise<Coupon[]> {
     const coupons = await this.prisma.coupon.findMany({
-      where: id !== undefined ? { id } : {},
+      where: type !== undefined ? { coupon_id: type } : {},
     });
 
     return coupons.map(
-      (coupon) => new Coupon(coupon.id, coupon.code, coupon.discount)
+      (coupon) => new Coupon(coupon.coupon_id, coupon.code, coupon.discount)
     );
   }
 
-  async findById(id: number): Promise<Coupon | null> {
+  async findById(coupon_id: number): Promise<Coupon | null> {
     const coupon = await this.prisma.coupon.findUnique({
       where: {
-        id: id,
+        coupon_id: coupon_id,
       },
     });
 
     if (!coupon) return null;
 
-    return new Coupon(coupon.id, coupon.code, coupon.discount);
+    return new Coupon(coupon.coupon_id, coupon.code, coupon.discount);
   }
 
   async findByCode(code: string): Promise<Coupon | null> {
@@ -55,29 +55,29 @@ export class PrismaCouponRepository implements CouponRepository {
 
     if (!coupon) return null;
 
-    return new Coupon(coupon.id, coupon.code, coupon.discount);
+    return new Coupon(coupon.coupon_id, coupon.code, coupon.discount);
   }
 
-  async update(coupon: UpdateCouponDTO): Promise<Coupon> {
+  async update(data: UpdateCouponDTO): Promise<Coupon> {
     const updated = await this.prisma.coupon.update({
       where: {
-        id: coupon.id,
+        coupon_id: data.coupon_id,
       },
       data: {
-        code: coupon.code,
-        discount: coupon.discount,
-        expiration: coupon.expiration,
-        used: coupon.used
+        code: data.code,
+        discount: data.discount,
+        expiration: data.expiration,
+        used: data.used,
       },
     });
 
-    return new Coupon(updated.id, updated.code, updated.discount);
+    return new Coupon(updated.coupon_id, updated.code, updated.discount);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(coupon_id: number): Promise<void> {
     await this.prisma.coupon.delete({
       where: {
-        id: id,
+        coupon_id: coupon_id,
       },
     });
   }

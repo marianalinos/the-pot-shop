@@ -1,10 +1,11 @@
 export interface CreateCartProductDTO {
-  cartId: number;
-  productId: number;
+  cart_id: number;
+  product_id: number;
   quantity: number;
 }
 
 export interface UpdateCartProductDTO {
-  id: number;
+  cart_product_id: number;
+  product_id: number;
   quantity: number;
 }
