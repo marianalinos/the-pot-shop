@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Product } from "../api/products";
+import { addCartProduct } from "../api/cart-product";
 
 export default function ProductCard({
   product_id,
@@ -9,15 +10,23 @@ export default function ProductCard({
 }: Product) {
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
-    onAddToCart(product_id, quantity);
+  const handleAddToCart = async () => {
+    try {
+      const cart_id = 1;
+
+      await addCartProduct(cart_id, product_id, quantity);
+      alert("Product added to cart successfully!");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("Failed to add product to cart");
+    }
   };
 
   return (
     <div className="card">
-      <div className="image-container">{image}</div>
+      <img src={image} alt={product_name} />
       <h3 className="name">{product_name}</h3>
-      <p className="price">R$ {price.toFixed(2)}</p>
+      <p className="price">R$ {Number(price).toFixed(2)}</p>
 
       <div className="quantity-container">
         <button

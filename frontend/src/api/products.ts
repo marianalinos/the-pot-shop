@@ -1,12 +1,13 @@
+import type { Decimal } from "@prisma/client/runtime/library";
 import axios from "axios";
 import type { AxiosResponse } from "axios";  
 
 const API_BASE_URL = "http://localhost:3000/api";
 
 export type Product = {
-  product_id: string;
+  product_id: number;
   product_name: string;
-  price: string;
+  price: Decimal;
   image: string;
 };
 

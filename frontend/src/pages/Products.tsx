@@ -1,12 +1,9 @@
 import ProductCard from "../components/ProductComponent";
 import { useState, useEffect } from "react";
 import { getProducts, type Product } from "../api/products";
+import Header from "../components/Header";
 
 export default function Products() {
-  const [productsI] = useState([
-    { id: 1, name: "Poção", price: 20, image: "🧪" },
-    { id: 2, name: "Espada", price: 100, image: "⚔️" },
-  ]);
 
   const [products, setProducts] = useState<Product[] | null>(null);
 
@@ -22,6 +19,7 @@ export default function Products() {
 
   return (
     <>
+      <Header />
       <h1>PRODUTOS</h1>
       <div className="products-container">
         {products ? (
