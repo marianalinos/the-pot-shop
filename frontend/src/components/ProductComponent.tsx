@@ -26,8 +26,7 @@ export default function ProductCard({
     <div className="card">
       <img src={image} alt={product_name} />
       <h3 className="name">{product_name}</h3>
-      <p className="price">R$ {Number(price).toFixed(2)}</p>
-
+      <p className="price">{Number(price)}G</p>
       <div className="quantity-container">
         <button
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}

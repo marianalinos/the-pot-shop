@@ -3,24 +3,18 @@ import { Decimal } from "@prisma/client/runtime/library.js";
 export class Customer {
   private customer_id: number;
   private customer_name: string;
-  private email: string;
-  private password: string;
   private wallet: Decimal;
 
   constructor(
     customer_id: number,
     customer_name: string,
-    email: string,
-    password: string,
     wallet: Decimal
   ) {
     this.customer_id = customer_id;
     this.customer_name = customer_name;
-    this.email = email;
-    this.password = password;
     this.wallet = wallet;
   }
-  
+
   public getId(): number {
     return this.customer_id;
   }

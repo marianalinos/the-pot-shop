@@ -20,9 +20,9 @@ export type CartProduct = {
 };
 
 // Criar um novo carrinho
-export async function createCart(user_id?: string): Promise<Cart> {
+export async function createCart(customer_id?: string): Promise<Cart> {
   const response: AxiosResponse<Cart> = await axios.post(`${API_BASE_URL}/carts`, {
-    user_id
+    customer_id
   });
   return response.data;
 }
@@ -59,7 +59,7 @@ export async function removeCartProduct(
   await axios.delete(`${API_BASE_URL}/cartproducts/${cart_product_id}`);
 }
 
-// Obter todos os produtos do carrinho
+// Obter todos os produtos do carrinho 
 export async function getCartProducts(cart_id: string): Promise<CartProduct[]> {
   const response: AxiosResponse<CartProduct[]> = await axios.get(
     `${API_BASE_URL}/carts/${cart_id}/products`

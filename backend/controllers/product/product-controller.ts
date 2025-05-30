@@ -12,7 +12,7 @@ export class ProductController {
   async create(req: Request, res: Response) {
     try {
       const createProduct: CreateProductDTO = {
-        product_name: String(req.body.name),
+        product_name: String(req.body.product_name),
         price: Decimal(req.body.price),
         image: String(req.body.image),
       };

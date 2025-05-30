@@ -13,19 +13,19 @@ export class PrismaCustomerRepository implements CustomerRepository {
     this.prisma = prisma;
   }
   async create(data: CreateCustomerDTO): Promise<void> {
+    const wallet = Math.floor(Math.random() * 46) + 5;
+
     await this.prisma.customer.create({
       data: {
         customer_name: data.customer_name,
-        email: data.email,
-        password: data.password,
-        wallet: data.wallet,
+        wallet: wallet,
       },
     });
   }
-  async findById(customer_id: number): Promise<Customer | null> {
+  async findByName(customer_name: string): Promise<Customer | null> {
     const customer = await this.prisma.customer.findFirst({
       where: {
-        customer_id: customer_id,
+        customer_name: customer_name,
       },
     });
 
@@ -36,8 +36,6 @@ export class PrismaCustomerRepository implements CustomerRepository {
     return new Customer(
       customer.customer_id,
       customer.customer_name,
-      customer.email,
-      customer.password,
       customer.wallet
     );
   }
@@ -52,8 +50,6 @@ export class PrismaCustomerRepository implements CustomerRepository {
         new Customer(
           customer.customer_id,
           customer.customer_name,
-          customer.email,
-          customer.password,
           customer.wallet
         )
     );
@@ -65,17 +61,13 @@ export class PrismaCustomerRepository implements CustomerRepository {
       },
       data: {
         customer_name: data.customer_name,
-        email: data.email,
-        password: data.password,
-        wallet: data.wallet
+        wallet: data.wallet,
       },
     });
     return new Customer(
-        updatedCustomer.customer_id,
-        updatedCustomer.customer_name,
-        updatedCustomer.email,
-        updatedCustomer.password,
-        updatedCustomer.wallet
+      updatedCustomer.customer_id,
+      updatedCustomer.customer_name,
+      updatedCustomer.wallet
     );
   }
   async delete(customer_id: number): Promise<void> {

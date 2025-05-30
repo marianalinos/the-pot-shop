@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Header from "../components/Header";
-import { XMarkIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 
 type Potion = {
@@ -58,12 +58,8 @@ export default function Cart() {
   return (
     <>
       <Header cartItemCount={cartItems.length} />
-      <div className="align-middle">
+      <div className="align-middle px-40">
         <div className="p-6 bg-[#432e56]/90">
-          <h1 className="text-4xl md:text-5xl mb-8 text-center text-shadow-lg shadow-black/50 flex justify-center items-center">
-            <ShoppingCartIcon className="h-10 w-10 mr-3" />
-            SEU CARRINHO
-          </h1>
 
           {cartItems.length === 0 ? (
             <div className="text-center py-12">

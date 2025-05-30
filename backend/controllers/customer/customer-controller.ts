@@ -9,28 +9,27 @@ export class CustomerController {
   constructor(repository: CustomerRepository) {
     this.repository = repository;
   }
-
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const createCustomer: CreateCustomerDTO = {
         customer_name: String(req.body.customer_name),
-        email: String(req.body.email),
-        password: String(req.body.password),
-        wallet: new Decimal(req.body.wallet),
+        // Generate random wallet between 5-50 instead of using req.body.wallet
+        wallet: new Decimal(Math.floor(Math.random() * 46) + 5),
       };
 
       await this.repository.create(createCustomer);
-      return res.status(201).send();
+      return res.status(201).send(createCustomer);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }
   }
-
   async read(req: Request, res: Response): Promise<Response> {
     try {
       const customer_id = req.query.customer_id as string;
       const customers = await this.repository.read(
-        isNaN(Number(customer_id)) || Number(customer_id) === 0 ? undefined : Number(customer_id)
+        isNaN(Number(customer_id)) || Number(customer_id) === 0
+          ? undefined
+          : Number(customer_id)
       );
       return res.status(200).json(customers);
     } catch (error: any) {
@@ -38,10 +37,10 @@ export class CustomerController {
     }
   }
 
-  async findById(req: Request, res: Response): Promise<Response> {
+  async findByName(req: Request, res: Response): Promise<Response> {
     try {
-      const { customer_id } = req.params;
-      const customer = await this.repository.findById(Number(customer_id));
+      const { customer_name } = req.params;
+      const customer = await this.repository.findByName(customer_name);
       return res.status(200).json(customer);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
@@ -53,14 +52,10 @@ export class CustomerController {
       const updateCustomer: UpdateCustomerDTO = {
         customer_id: Number(req.params.customer_id),
         customer_name: String(req.body.customer_name),
-        email: String(req.body.email),
-        password: String(req.body.password),
         wallet: new Decimal(req.body.wallet),
       };
 
-      const updatedCustomer = await this.repository.update(
-        updateCustomer
-      );
+      const updatedCustomer = await this.repository.update(updateCustomer);
       return res.status(200).json(updatedCustomer);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });

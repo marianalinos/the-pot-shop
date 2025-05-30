@@ -1,23 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css'
 import App from './pages/App'
-import Products from './pages/Products'
-import Cart from './pages/Cart'
-import Orders from './pages/Orders'
+import { CustomerProvider } from './context/CustomerContext'
 
 const root = createRoot(document.getElementById('root')!)
 
 root.render(
   <StrictMode>
     <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<Orders />} />
-      </Routes>
+      <CustomerProvider>
+        <App />
+      </CustomerProvider>
     </Router>
   </StrictMode>
 )

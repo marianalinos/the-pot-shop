@@ -7,24 +7,24 @@ interface HeaderProps {
 
 export default function Header({ cartItemCount = 0 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-10">
+    <header className="sticky min-h-auto min-w-screen bg-[#432e56]/90">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-gray-900">
-              The Pot
+            <Link to="/" className="text-xl ">
+              The Potion Shop
             </Link>
             
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
                 to="/products"
-                className="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-normal"
+                
               >
                 Products
               </Link>
               <Link
                 to="/orders"
-                className="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-normal"
+                
               >
                 Orders
               </Link>
