@@ -11,35 +11,44 @@ export default function Login() {
   const { currentCustomer, loginCustomer, logoutCustomer } = useCustomer();
   const navigate = useNavigate();
 
-const handleLogin = async () => {
-  if (!nickname.trim()) {
-    setError('A nickname is required!');
-    return;
-  }
-
-  setIsLoading(true);
-  setError('');
-
-  try {
-    // Try to create or get customer
-    const customer = await addCustomer(nickname);
-    
-    // Ensure we have minimum required data
-    if (!customer.customer_name) {
-      throw new Error("Invalid customer data received");
+  const handleLogin = async () => {
+    if (!nickname.trim()) {
+      setError('A nickname is required!');
+      return;
     }
 
-    // Login with whatever data we got
-    loginCustomer(customer);
-    navigate('/products');
-    
-  } catch (error: any) {
-    setError(error.message || 'Login failed. Please try again.');
-    console.error('Final login error:', error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const existingCustomer = await getCustomerByName(nickname);
+      
+      if (existingCustomer) {
+        loginCustomer(existingCustomer);
+        navigate('/products');
+        return;
+      }
+
+      try {
+        const newCustomer = await addCustomer(nickname);
+        
+        if (!newCustomer?.customer_name) {
+          throw new Error("Invalid customer data received");
+        }
+
+        loginCustomer(newCustomer);
+        navigate('/products');
+      } catch (createError) {
+        console.error('Customer creation failed:', createError);
+        setError('Failed to create customer. Please try a different name.');
+      }
+    } catch (error: any) {
+      console.error('Login error:', error);
+      setError(error.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logoutCustomer();

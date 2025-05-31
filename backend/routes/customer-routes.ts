@@ -12,7 +12,7 @@ const controller = new CustomerController(repository);
 // @ts-ignore
 router.get('/', (req, res) => controller.read(req, res));
 // @ts-ignore
-router.get('/:customer_id', (req, res) => controller.findById(req, res));
+router.get('/:customer_name', (req, res) => controller.findByName(req, res));
 // @ts-ignore
 router.post('/', (req, res) => controller.create(req, res));
 // @ts-ignore

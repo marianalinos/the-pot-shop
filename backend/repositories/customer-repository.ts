@@ -10,4 +10,4 @@ export interface CustomerRepository {
   findByName(name: string): Promise<Customer | null>;
   update(data: UpdateCustomerDTO): Promise<Customer>;
   delete(customer_id: number): Promise<void>;
-}
+} 

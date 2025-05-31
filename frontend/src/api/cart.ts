@@ -19,7 +19,6 @@ export type CartProduct = {
   image: string;
 };
 
-// Criar um novo carrinho
 export async function createCart(customer_id?: string): Promise<Cart> {
   const response: AxiosResponse<Cart> = await axios.post(`${API_BASE_URL}/carts`, {
     customer_id
@@ -27,7 +26,6 @@ export async function createCart(customer_id?: string): Promise<Cart> {
   return response.data;
 }
 
-// Adicionar produto ao carrinho
 export async function addCartProduct(
   cart_id: string,
   product_id: string,
@@ -40,7 +38,6 @@ export async function addCartProduct(
   return response.data;
 }
 
-// Atualizar quantidade do produto no carrinho
 export async function updateCartProduct(
   cart_product_id: string,
   quantity: number
@@ -52,14 +49,12 @@ export async function updateCartProduct(
   return response.data;
 }
 
-// Remover produto do carrinho
 export async function removeCartProduct(
   cart_product_id: string
 ): Promise<void> {
   await axios.delete(`${API_BASE_URL}/cartproducts/${cart_product_id}`);
 }
 
-// Obter todos os produtos do carrinho 
 export async function getCartProducts(cart_id: string): Promise<CartProduct[]> {
   const response: AxiosResponse<CartProduct[]> = await axios.get(
     `${API_BASE_URL}/carts/${cart_id}/products`
