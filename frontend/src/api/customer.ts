@@ -11,7 +11,7 @@ export type Customer = {
 export async function getCurrentCustomer(): Promise<Customer | null> {
   try {
     const response = await axios.get<Customer>(
-      `${API_BASE_URL}/customers/current`,
+      `${API_BASE_URL}/customers/`,
       {
         validateStatus: (status) => status === 200 || status === 401
       }
@@ -32,8 +32,6 @@ export async function addCustomer(customer_name: string): Promise<Customer> {
         validateStatus: () => true
       }
     );
-
-    console.log('Raw create response:', response);
 
     if (response.status === 201 || response.status === 200) {
       if (response.data?.customer_name) {

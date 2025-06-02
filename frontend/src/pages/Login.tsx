@@ -36,12 +36,14 @@ export default function Login() {
           throw new Error("Invalid customer data received");
         }
 
+        console.log('New customer created:', newCustomer);
         loginCustomer(newCustomer);
         navigate('/products');
       } catch (createError) {
         console.error('Customer creation failed:', createError);
         setError('Failed to create customer. Please try a different name.');
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Login error:', error);
       setError(error.message || 'Login failed. Please try again.');

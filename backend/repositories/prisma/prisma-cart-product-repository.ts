@@ -5,6 +5,7 @@ import {
   CreateCartProductDTO,
   UpdateCartProductDTO,
 } from "../../controllers/cart-product/cart-product-dto";
+import { Product } from "../../models/product";
 
 export class PrismaCartProductRepository implements CartProductRepository {
   private prisma: PrismaClient;
@@ -32,7 +33,17 @@ export class PrismaCartProductRepository implements CartProductRepository {
   async read(type: number | undefined): Promise<CartProduct[]> {
     const cartProducts = await this.prisma.cartProduct.findMany({
       where: {
-        cart_product_id: type,
+        cart_id: type,
+      },
+      include: {
+        product: {
+          select: {
+            product_id: true,
+            product_name: true,
+            price: true,
+            image: true,
+          },
+        },
       },
     });
     return cartProducts.map(
@@ -41,7 +52,15 @@ export class PrismaCartProductRepository implements CartProductRepository {
           cartProduct.cart_product_id,
           cartProduct.cart_id,
           cartProduct.product_id,
-          cartProduct.quantity
+          cartProduct.quantity,
+          cartProduct.product
+            ? new Product(
+                cartProduct.product.product_id,
+                cartProduct.product.product_name,
+                cartProduct.product.price,
+                cartProduct.product.image
+              )
+            : undefined
         )
     );
   }
@@ -65,6 +84,22 @@ export class PrismaCartProductRepository implements CartProductRepository {
       data: {
         quantity: data.quantity,
       },
+    });
+    return new CartProduct(
+      cartProduct.cart_product_id,
+      cartProduct.cart_id,
+      cartProduct.product_id,
+      cartProduct.quantity
+    );
+  }
+
+  async updateQuantity(
+    cart_product_id: number,
+    quantity: number
+  ): Promise<CartProduct> {
+    const cartProduct = await this.prisma.cartProduct.update({
+      where: { cart_product_id },
+      data: { quantity },
     });
     return new CartProduct(
       cartProduct.cart_product_id,

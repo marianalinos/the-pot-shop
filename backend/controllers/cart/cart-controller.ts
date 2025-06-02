@@ -11,8 +11,8 @@ export class CartController {
         coupon_code: String(req.body.coupon_code),
         customer_id: Number(req.body.customer_id),
       };
-      await this.repository.create(createCart);
-      return res.status(201).send();
+      const cart = await this.repository.create(createCart);
+      return res.status(201).send(cart);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }
@@ -25,6 +25,29 @@ export class CartController {
         isNaN(Number(cart_id)) || Number(cart_id) == 0 ? undefined : Number(cart_id)
       );
       return res.status(200).json(carts);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+  
+  async applyCoupon(req: Request, res: Response) {
+    try {
+      const cart_id = Number(req.params.cart_id);
+      const coupon_code = String(req.body.coupon_code);
+      const cart = await this.repository.applyCoupon(cart_id, coupon_code);
+      return res.status(200).json(cart);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+
+  async findByCustomerId(req: Request, res: Response) {
+    try {
+      const customer_id = Number(req.params.customer_id);
+      const cart = await this.repository.findByCustomerId(customer_id);
+      return cart
+        ? res.status(200).json(cart)
+        : res.status(404).json({ message: "Cart not found for this customer" });
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }

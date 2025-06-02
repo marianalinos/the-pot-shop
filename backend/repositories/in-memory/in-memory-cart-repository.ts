@@ -39,6 +39,21 @@ export class InMemoryCartRepository implements CartRepository {
     return cart ? cart : null;
   }
 
+  async applyCoupon(cart_id: number, coupon_code: string): Promise<Cart> {
+    const cart = this.carts.find((c) => c.getId() === cart_id);
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
+    cart.setCouponCode(coupon_code);
+    return cart;
+  }
+
+  async findByCustomerId(customer_id: number): Promise<Cart | null> {
+    const cart = this.carts.find((c) => c.getCustomerId() === customer_id);
+    return cart ? cart : null;
+  }
+
   async update(data: UpdateCartDTO): Promise<Cart> {
     const index = this.carts.findIndex((c) => c.getId() === data.cart_id);
 

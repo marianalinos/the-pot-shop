@@ -30,6 +30,10 @@ export class Cart {
     this.total = total;
   }
 
+  public setCouponCode(couponCode: string | null): void {
+    this.coupon_code = couponCode;
+  }
+
   public getCouponCode(): string | null {
     return this.coupon_code;
   }

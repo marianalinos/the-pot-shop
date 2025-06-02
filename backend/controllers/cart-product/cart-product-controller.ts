@@ -25,9 +25,9 @@ export class CartProductController {
 
   async read(req: Request, res: Response): Promise<Response> {
     try {
-      const cart_product_id = req.query.cart_product_id as string;
+      const cart_id = req.query.cart_id as string;
       const cartProducts = await this.repository.read(
-        isNaN(Number(cart_product_id)) || Number(cart_product_id) == 0 ? undefined : Number(cart_product_id)
+        isNaN(Number(cart_id)) || Number(cart_id) == 0 ? undefined : Number(cart_id)
       );
       return res.status(200).json(cartProducts);
     } catch (error: any) {
@@ -56,6 +56,20 @@ export class CartProductController {
         quantity: Number(req.body.quantity),
       };
       const cartProduct = await this.repository.update(updateCartProduct);
+      return res.status(200).json(cartProduct);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+
+  async updateQuantity(req: Request, res: Response) {
+    try {
+      const cart_product_id = Number(req.params.cart_product_id);
+      const quantity = Number(req.body.quantity);
+      if (isNaN(cart_product_id) || isNaN(quantity)) {
+        return res.status(400).json({ message: "Invalid cart product ID or quantity" });
+      }
+      const cartProduct = await this.repository.updateQuantity(cart_product_id, quantity);
       return res.status(200).json(cartProduct);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });

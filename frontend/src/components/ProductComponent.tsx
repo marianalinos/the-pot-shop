@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Product } from "../api/products";
 import { addCartProduct } from "../api/cart-product";
+import { useCustomer } from "../context/CustomerContext";
 
 export default function ProductCard({
   product_id,
@@ -9,12 +10,12 @@ export default function ProductCard({
   image,
 }: Product) {
   const [quantity, setQuantity] = useState(1);
+  const { currentCart } = useCustomer();
 
   const handleAddToCart = async () => {
     try {
-      const cart_id = 1;
 
-      await addCartProduct(cart_id, product_id, quantity);
+      await addCartProduct(currentCart?.cart_id ?? 1, product_id, quantity);
       alert("Product added to cart successfully!");
     } catch (error) {
       console.error("Error adding product to cart:", error);

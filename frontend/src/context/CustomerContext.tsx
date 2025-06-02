@@ -5,15 +5,22 @@ import {
   type ReactNode,
   useEffect,
 } from "react";
+import { type Customer } from "../api/customer";
 import {
-  type Customer,
-  getCurrentCustomer,
-} from "../api/customer";
+  createCart,
+  getCart,
+  applyCouponToCart,
+  getCustomerCart,
+  type Cart,
+} from "../api/cart";
 
 type CustomerContextType = {
   currentCustomer: Customer | null;
+  currentCart: Cart | null;
   loginCustomer: (customerData: Customer) => Promise<void>;
   logoutCustomer: () => Promise<void>;
+  refreshCart: () => Promise<void>;
+  applyCoupon: (coupon_code: string) => Promise<void>;
   isLoading: boolean;
 };
 
@@ -23,31 +30,59 @@ const CustomerContext = createContext<CustomerContextType | undefined>(
 
 export function CustomerProvider({ children }: { children: ReactNode }) {
   const [currentCustomer, setCurrentCustomer] = useState<Customer | null>(null);
+  const [currentCart, setCurrentCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const refreshCart = async () => {
+    if (!currentCart) return;
+    try {
+      const updatedCart = await getCart(currentCart.cart_id);
+      setCurrentCart(updatedCart);
+    } catch (error) {
+      console.error("Failed to refresh cart:", error);
+    }
+  };
+
   useEffect(() => {
+    console.log("Initializing customer context...");
     const initializeCustomer = async () => {
       try {
-        const customer = await getCurrentCustomer();
-        if (customer) {
-          setCurrentCustomer(customer);
+        if (!currentCustomer) {
+          return;
+        }
+        const cart = await getCustomerCart(currentCustomer.customer_id!);
+        if (cart) {
+          setCurrentCart(cart);
+        } else {
+          const newCart = await createCart(currentCustomer.customer_id);
+          setCurrentCart(newCart);
         }
       } catch (error) {
-        console.error("Failed to fetch current customer:", error);
+        console.error("Failed to initialize customer:", error);
       } finally {
         setIsLoading(false);
       }
     };
     initializeCustomer();
-  }, []);
+  }, [currentCustomer]);
+
+  const applyCoupon = async (coupon_code: string) => {
+    if (!currentCart) return;
+    try {
+      const updatedCart = await applyCouponToCart(
+        currentCart.cart_id,
+        coupon_code
+      );
+      setCurrentCart(updatedCart);
+    } catch (error) {
+      console.error("Failed to apply coupon:", error);
+      throw error;
+    }
+  };
 
   const loginCustomer = async (customerData: Customer) => {
     try {
-      setCurrentCustomer({
-        customer_id: customerData.customer_id,
-        customer_name: customerData.customer_name,
-        wallet: customerData.wallet,
-      });
+      setCurrentCustomer(customerData);
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -57,6 +92,7 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
   const logoutCustomer = async () => {
     try {
       setCurrentCustomer(null);
+      setCurrentCart(null);
     } catch (error) {
       console.error("Logout failed:", error);
       throw error;
@@ -67,8 +103,11 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
     <CustomerContext.Provider
       value={{
         currentCustomer,
+        currentCart,
         loginCustomer,
         logoutCustomer,
+        refreshCart,
+        applyCoupon,
         isLoading,
       }}
     >

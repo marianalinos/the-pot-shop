@@ -17,8 +17,8 @@ export class CustomerController {
         wallet: new Decimal(Math.floor(Math.random() * 46) + 5),
       };
 
-      await this.repository.create(createCustomer);
-      return res.status(201).send(createCustomer);
+      const customer = await this.repository.create(createCustomer);
+      return res.status(201).send(customer);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }

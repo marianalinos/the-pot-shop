@@ -61,6 +61,24 @@ export class InMemoryCartProductRepository implements CartProductRepository {
     return updated;
   }
 
+  async updateQuantity(cart_product_id: number, quantity: number): Promise<CartProduct> {
+    const index = this.cartProducts.findIndex((cartProduct) => cartProduct.getId() === cart_product_id);
+    if (index === -1) {
+      throw new Error("Cart product not found");
+    }
+
+    const existing = this.cartProducts[index];
+    const updated = new CartProduct(
+      existing.getId(),
+      existing.getCartId(),
+      existing.getProductId(),
+      quantity
+    );
+
+    this.cartProducts[index] = updated;
+    return updated;
+  }
+
   async delete(cart_product_id: number): Promise<void> {
     const index = this.cartProducts.findIndex((cartProduct) => cartProduct.getId() === cart_product_id);
     if (index !== -1) {

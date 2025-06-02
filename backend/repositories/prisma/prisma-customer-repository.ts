@@ -12,15 +12,21 @@ export class PrismaCustomerRepository implements CustomerRepository {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
-  async create(data: CreateCustomerDTO): Promise<void> {
+  async create(data: CreateCustomerDTO): Promise<Customer> {
     const wallet = Math.floor(Math.random() * 46) + 5;
 
-    await this.prisma.customer.create({
+    const customer = await this.prisma.customer.create({
       data: {
         customer_name: data.customer_name,
         wallet: wallet,
       },
     });
+
+    return new Customer(
+      customer.customer_id,
+      customer.customer_name,
+      customer.wallet
+    );
   }
   async findByName(customer_name: string): Promise<Customer | null> {
     const customer = await this.prisma.customer.findFirst({

@@ -4,60 +4,61 @@ import type { AxiosResponse } from "axios";
 const API_BASE_URL = "http://localhost:3000/api";
 
 export type Cart = {
-  cart_id: string;
-  user_id?: string;
-  created_at: string;
+  cart_id: number;
+  total: number;
+  coupon_code?: string | null;
+  customer_id?: number | null;
 };
 
-export type CartProduct = {
-  cart_product_id: string;
-  cart_id: string;
-  product_id: string;
-  quantity: number;
-  product_name: string;
-  price: number;
-  image: string;
-};
-
-export async function createCart(customer_id?: string): Promise<Cart> {
-  const response: AxiosResponse<Cart> = await axios.post(`${API_BASE_URL}/carts`, {
-    customer_id
-  });
+export async function createCart(customer_id?: number): Promise<Cart> {
+  console.log("Creating cart for customer_id:", customer_id);
+  const response: AxiosResponse<Cart> = await axios.post(
+    `${API_BASE_URL}/carts`,
+    {
+      customer_id,
+    }
+  );
+  console.log("Cart created successfully:", response.data);
   return response.data;
 }
 
-export async function addCartProduct(
-  cart_id: string,
-  product_id: string,
-  quantity: number
-): Promise<CartProduct> {
-  const response: AxiosResponse<CartProduct> = await axios.post(
-    `${API_BASE_URL}/cartproducts`,
-    { cart_id, product_id, quantity }
+export async function getCart(cart_id: number): Promise<Cart> {
+  const response: AxiosResponse<Cart> = await axios.get(
+    `${API_BASE_URL}/carts/${cart_id}`
   );
   return response.data;
 }
 
-export async function updateCartProduct(
-  cart_product_id: string,
-  quantity: number
-): Promise<CartProduct> {
-  const response: AxiosResponse<CartProduct> = await axios.put(
-    `${API_BASE_URL}/cartproducts/${cart_product_id}`,
-    { quantity }
-  );
-  return response.data;
+export async function getCustomerCart(
+  customer_id: number
+): Promise<Cart | null> {
+  try {
+    console.log("Fetching cart for customer_id:", customer_id);
+    const response: AxiosResponse<Cart> = await axios.get(
+      `${API_BASE_URL}/carts/customer/${customer_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 }
 
-export async function removeCartProduct(
-  cart_product_id: string
-): Promise<void> {
-  await axios.delete(`${API_BASE_URL}/cartproducts/${cart_product_id}`);
-}
-
-export async function getCartProducts(cart_id: string): Promise<CartProduct[]> {
-  const response: AxiosResponse<CartProduct[]> = await axios.get(
-    `${API_BASE_URL}/carts/${cart_id}/products`
-  );
-  return response.data;
+export async function applyCouponToCart(
+  cart_id: number, 
+  coupon_code: string
+): Promise<Cart | null> {
+  //   const response: AxiosResponse<Cart> = await axios.get(
+  //     `${API_BASE_URL}/carts/customer/${customer_id}`
+  //   );
+  //   return response.data;
+  // } catch (error) {
+  //   if (axios.isAxiosError(error) && error.response?.status === 404) {
+  //     return null;
+  //   }
+  //   throw error;
+  new Object({cart_id,coupon_code});
+  return {} as Cart
 }

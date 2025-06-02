@@ -12,9 +12,13 @@ router.post("/", (req, res) => controller.create(req, res));
 // @ts-ignore
 router.get("/", (req, res) => controller.read(req, res));
 // @ts-ignore
+router.get("/customer/:customer_id", (req, res) => controller.findByCustomerId(req, res));
+// @ts-ignore
 router.get("/:cart_id", (req, res) => controller.findById(req, res));
 // @ts-ignore
 router.put("/:cart_id", (req, res) => controller.update(req, res));
+// @ts-ignore
+router.patch("/:cart_id/coupon", (req, res) => controller.applyCoupon(req, res));
 // @ts-ignore
 router.delete("/:cart_id", (req, res) => controller.delete(req, res));
 // @ts-ignore

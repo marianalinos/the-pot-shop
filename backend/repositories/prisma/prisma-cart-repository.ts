@@ -22,25 +22,25 @@ export class PrismaCartRepository implements CartRepository {
       };
     }
 
-    if (data.coupon_code && data.coupon_code !== "null") {
-      const couponExists = await this.prisma.coupon.findUnique({
-        where: { code: data.coupon_code },
-      });
+    // if (data.coupon_code && data.coupon_code !== "null") {
+    //   const couponExists = await this.prisma.coupon.findUnique({
+    //     where: { code: data.coupon_code },
+    //   });
 
-      if (!couponExists) {
-        throw new Error(`Cupom ${data.coupon_code} não encontrado`);
-      }
+    //   if (!couponExists) {
+    //     throw new Error(`Cupom ${data.coupon_code} não encontrado`);
+    //   }
 
-      createData.coupon = {
-        connect: { code: data.coupon_code },
-      };
-    }
+    //   createData.coupon = {
+    //     connect: { code: data.coupon_code },
+    //   };
+    // }
 
     try {
       const cart = await this.prisma.cart.create({
         data: createData,
         include: {
-          coupon: true,
+          // coupon: true,
           customer: true,
         },
       });
@@ -48,8 +48,8 @@ export class PrismaCartRepository implements CartRepository {
       return new Cart(
         cart.cart_id,
         cart.total,
-        cart.coupon?.code || null,
-        cart.customer?.customer_id || null
+        // cart.coupon?.code || null,
+        String(cart.customer?.customer_id)
       );
     } catch (error) {
       console.error("Erro detalhado:", error);
@@ -78,6 +78,42 @@ export class PrismaCartRepository implements CartRepository {
         },
         coupon: true,
         customer: true,
+      },
+    });
+    return cart
+      ? new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
+      : null;
+  }
+
+  async applyCoupon(cart_id: number, coupon_code: string): Promise<Cart> {
+    const coupon = await this.prisma.coupon.findUnique({
+      where: { code: coupon_code },
+    });
+    if (!coupon) {
+      throw new Error(`Cupom ${coupon_code} não encontrado`);
+    }
+    const cart = await this.prisma.cart.update({
+      where: { cart_id },
+      data: {
+        coupon: {
+          connect: { code: coupon_code },
+        },
+      },
+    });
+    await this.calculateTotal(cart_id);
+    return new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id); 
+  }
+
+  async findByCustomerId(customer_id: number): Promise<Cart | null> {
+    const cart = await this.prisma.cart.findFirst({
+      where: { customer_id },
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
+        },
+        coupon: true,
       },
     });
     return cart

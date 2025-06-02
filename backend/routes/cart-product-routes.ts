@@ -17,6 +17,8 @@ router.get("/:cart_product_id", (req, res) => controller.findById(req, res));
 // @ts-ignore
 router.put("/:cart_product_id", (req, res) => controller.update(req, res));
 // @ts-ignore
+router.patch("/:cart_product_id/quantity", (req, res) => controller.updateQuantity(req, res));
+// @ts-ignore
 router.delete("/:cart_product_id", (req, res) => controller.delete(req, res));
 
 export default router;

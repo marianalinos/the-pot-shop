@@ -6,6 +6,8 @@ export interface CartRepository {
   create(data: CreateCartDTO): Promise<Cart>;
   read(type: number | undefined): Promise<Cart[]>;
   findById(cart_id: number): Promise<Cart | null>;
+  applyCoupon(cart_id: number, coupon_code: string): Promise<Cart>;
+  findByCustomerId(customer_id: number): Promise<Cart | null>;
   update(data: UpdateCartDTO): Promise<Cart>;
   delete(cart_id: number): Promise<void>;
   calculateTotal(cart_id: number): Promise<Decimal>;

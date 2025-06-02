@@ -12,9 +12,6 @@ export default function Products() {
     });
   }, []);
 
-  const handleAddToCart = (id: number, quantity: number) => {
-    console.log(`Adicionado: ID ${id}, Quantidade ${quantity}`);
-  };
 
   return (
     <>
@@ -26,7 +23,6 @@ export default function Products() {
               <ProductCard
                 key={product.product_id}
                 {...product}
-                onAddToCart={handleAddToCart}
               />
             ))
           ) : (
