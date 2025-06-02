@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { GiSwapBag } from "react-icons/gi";
 
 interface HeaderProps {
   cartItemCount?: number;
@@ -20,13 +20,13 @@ export default function Header({ cartItemCount = 0 }: HeaderProps) {
                 to="/products"
                 
               >
-                Products
+                Produtos
               </Link>
               <Link
                 to="/orders"
                 
               >
-                Orders
+                Pedidos
               </Link>
             </div>
           </div>
@@ -35,9 +35,9 @@ export default function Header({ cartItemCount = 0 }: HeaderProps) {
           <div className="flex items-center">
             <Link
               to="/cart"
-              className="p-1 rounded-full text-gray-400 hover:text-gray-500 relative"
+              className="p-1 rounded-b-md text-gray-400 hover:text-gray-500 relative"
             >
-              <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+              <GiSwapBag className="h-6 w-6" aria-hidden="true" />
               {cartItemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#b98dc2] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cartItemCount}

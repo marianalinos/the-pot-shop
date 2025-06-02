@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: the-pot-shop-db
+    environment:
+      POSTGRES_USER: the-pot-shop_owner
+      POSTGRES_PASSWORD: npg_lWYsGXw6I9bN
+      POSTGRES_DB: the-pot-shop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

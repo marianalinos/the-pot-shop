@@ -1,5 +1,4 @@
 export interface CreateCartDTO {
-  coupon_code?: string | null;
   customer_id?: number | null;
 }
 

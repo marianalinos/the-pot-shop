@@ -40,7 +40,7 @@ export class PrismaCartRepository implements CartRepository {
       const cart = await this.prisma.cart.create({
         data: createData,
         include: {
-          // coupon: true,
+          coupon: true,
           customer: true,
         },
       });
@@ -48,8 +48,8 @@ export class PrismaCartRepository implements CartRepository {
       return new Cart(
         cart.cart_id,
         cart.total,
-        // cart.coupon?.code || null,
-        String(cart.customer?.customer_id)
+        cart.coupon?.code || null,
+        cart.customer?.customer_id
       );
     } catch (error) {
       console.error("Erro detalhado:", error);

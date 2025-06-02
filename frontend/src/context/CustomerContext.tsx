@@ -17,6 +17,7 @@ import {
 type CustomerContextType = {
   currentCustomer: Customer | null;
   currentCart: Cart | null;
+  setCurrentCart: (cart: Cart | null) => void;
   loginCustomer: (customerData: Customer) => Promise<void>;
   logoutCustomer: () => Promise<void>;
   refreshCart: () => Promise<void>;
@@ -104,6 +105,7 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
       value={{
         currentCustomer,
         currentCart,
+        setCurrentCart,
         loginCustomer,
         logoutCustomer,
         refreshCart,

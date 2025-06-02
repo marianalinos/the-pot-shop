@@ -9,11 +9,11 @@ import {
   type CartProduct,
 } from "../api/cart-product";
 import Header from "../components/Header";
-import { applyCouponToCart } from "../api/cart";
+import { applyCouponToCart, getCart } from "../api/cart";
 import { getCouponDiscountByCode } from "../api/coupon";
 
 export default function Cart() {
-  const { currentCart } = useCustomer();
+  const { currentCart, setCurrentCart } = useCustomer();
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -40,11 +40,9 @@ export default function Cart() {
   useEffect(() => {
     if (!currentCart) return;
     const calculatedSubtotal = cartItems.reduce((sum, item) => {
-        return sum + (item.product?.price || 0) * item.quantity;
-      }, 0)
-    setSubtotal(
-      calculatedSubtotal
-    );
+      return sum + (item.product?.price || 0) * item.quantity;
+    }, 0);
+    setSubtotal(calculatedSubtotal);
     if (
       currentCart.coupon_code === undefined ||
       currentCart.coupon_code === null
@@ -56,7 +54,6 @@ export default function Cart() {
       if (discount) {
         const discountAmount = (calculatedSubtotal * discount) / 100;
         setTotal(calculatedSubtotal - discountAmount);
-        console.log("total", total);
         return total;
       }
       return total;
@@ -136,7 +133,7 @@ export default function Cart() {
                   <h3 className="text-xl font-semibold">
                     {item.product?.product_name}
                   </h3>
-                  <p className="text-gray-600">${item.product?.price}</p>
+                  <p className="text-md">{item.product?.price}G</p>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -161,7 +158,7 @@ export default function Cart() {
 
                 <div className="ml-4 text-right">
                   <p className="font-semibold">
-                    ${(item.product?.price || 0) * item.quantity}
+                    {(item.product?.price || 0) * item.quantity}G
                   </p>
                   <button
                     onClick={() => removeItem(item.cart_product_id)}
@@ -186,7 +183,7 @@ export default function Cart() {
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
-                  id="coupon_code"
+                  id="couponCode"
                   value={couponCode}
                   onChange={(e) => {
                     if (currentCart) {
@@ -204,6 +201,9 @@ export default function Cart() {
                   onClick={() => {
                     if (currentCart) {
                       applyCouponToCart(currentCart.cart_id, couponCode);
+                      getCart(currentCart.cart_id).then((cart) => {
+                        setCurrentCart(cart);
+                      });
                     }
                   }}
                   disabled={isLoading}

@@ -8,7 +8,6 @@ export class CartController {
   async create(req: Request, res: Response) {
     try {
       const createCart: CreateCartDTO = {
-        coupon_code: String(req.body.coupon_code),
         customer_id: Number(req.body.customer_id),
       };
       const cart = await this.repository.create(createCart);

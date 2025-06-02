@@ -50,15 +50,14 @@ export async function applyCouponToCart(
   cart_id: number, 
   coupon_code: string
 ): Promise<Cart | null> {
-  //   const response: AxiosResponse<Cart> = await axios.get(
-  //     `${API_BASE_URL}/carts/customer/${customer_id}`
-  //   );
-  //   return response.data;
-  // } catch (error) {
-  //   if (axios.isAxiosError(error) && error.response?.status === 404) {
-  //     return null;
-  //   }
-  //   throw error;
-  new Object({cart_id,coupon_code});
-  return {} as Cart
+  try {
+    const response: AxiosResponse<Cart> = await axios.patch(
+      `${API_BASE_URL}/carts/${cart_id}/coupon`,
+      { coupon_code }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error applying coupon to cart:", error);
+    return null;
+  }
 }
