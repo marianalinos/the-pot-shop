@@ -23,6 +23,7 @@ export default function Cart() {
 
   useEffect(() => {
     const fetchCartItems = async () => {
+      console.log("triggou");
       if (!currentCart) return;
       try {
         const items = await getCartProducts(currentCart.cart_id);
@@ -198,12 +199,22 @@ export default function Cart() {
                 />
                 {error && <p className="text-red-400 text-xl mt-2">{error}</p>}
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     if (currentCart) {
-                      applyCouponToCart(currentCart.cart_id, couponCode);
-                      getCart(currentCart.cart_id).then((cart) => {
-                        setCurrentCart(cart);
-                      });
+                      setIsLoading(true);
+                      try {
+                        await applyCouponToCart(
+                          currentCart.cart_id,
+                          couponCode
+                        );
+                        const updatedCart = await getCart(currentCart.cart_id);
+                        setCurrentCart(updatedCart);
+                      } catch (err) {
+                        setError("Erro ao aplicar o cupom");
+                        console.error(err);
+                      } finally {
+                        setIsLoading(false);
+                      }
                     }
                   }}
                   disabled={isLoading}
