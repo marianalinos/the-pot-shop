@@ -30,7 +30,7 @@ export class PrismaCouponRepository implements CouponRepository {
     });
 
     return coupons.map(
-      (coupon) => new Coupon(coupon.coupon_id, coupon.code, coupon.discount)
+      (coupon) => new Coupon(coupon.coupon_id, coupon.code, coupon.discount, coupon.expiration, coupon.used)
     );
   }
 
