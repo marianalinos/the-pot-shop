@@ -10,7 +10,7 @@ import {
 } from "../api/cart-product";
 import Header from "../components/Header";
 import { applyCouponToCart, createCart, getCart } from "../api/cart";
-import { getCouponDiscountByCode } from "../api/coupon";
+import { disableCoupon, getCouponByCode, getCouponDiscountByCode } from "../api/coupon";
 import { createOrder } from "../api/order";
 import { updateCustomerWallet } from "../api/customer";
 
@@ -206,6 +206,19 @@ export default function Cart() {
                     if (currentCart) {
                       setIsLoading(true);
                       try {
+                        const coupon = await getCouponByCode(couponCode);
+                        if (!coupon) {
+                          alert(`Cupom ${couponCode} não encontrado`);
+                          return;
+                        }
+                        if (coupon.used) {
+                          alert(`Cupom ${couponCode} já foi utilizado`);
+                          return;
+                        }
+                        if (coupon.expiration && new Date(coupon.expiration) < new Date()) {
+                          alert(`Cupom ${couponCode} expirado`);
+                          return;
+                        }
                         await applyCouponToCart(
                           currentCart.cart_id,
                           couponCode
@@ -213,7 +226,6 @@ export default function Cart() {
                         const updatedCart = await getCart(currentCart.cart_id);
                         setCurrentCart(updatedCart);
                       } catch (err) {
-                        setError("Erro ao aplicar o cupom");
                         console.error(err);
                       } finally {
                         setIsLoading(false);
@@ -254,6 +266,11 @@ export default function Cart() {
                     Number(currentCustomer.customer_id),
                     total
                   );
+                  if (currentCart.coupon_code) {
+                    await disableCoupon(
+                      currentCart.coupon_code
+                    );
+                  }
                   setCurrentCustomer(newCustomer);
                   const newCart = await createCart(
                     currentCustomer?.customer_id

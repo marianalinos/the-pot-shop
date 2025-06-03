@@ -88,4 +88,14 @@ export class CouponController {
       return res.status(400).json({ message: error.message });
     }
   }
+
+  async disable(req: Request, res: Response): Promise<Response> {
+    try {
+      const coupon_code = String(req.params.coupon_code);
+      await this.repository.disable(coupon_code);
+      return res.status(200).json({ coupon_code });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
 }

@@ -11,4 +11,5 @@ export interface CouponRepository {
   findByCode(code: string): Promise<Coupon | null>;
   update(data: UpdateCouponDTO): Promise<Coupon>;
   delete(coupon_id: number): Promise<void>;
+  disable(coupon_code: string): Promise<Coupon>;
 }

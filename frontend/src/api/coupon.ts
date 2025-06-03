@@ -11,15 +11,33 @@ export type Coupon = {
   used: boolean;
 };
 
-export async function getCouponDiscountByCode(couponCode: string): Promise<number | null> {
+export async function getCouponByCode(couponCode: string): Promise<Coupon | null> {
   try {
     const response: AxiosResponse<Coupon> = await axios.get(
       `${API_BASE_URL}/coupons/code/${couponCode}`
     );
-    console.log("Coupon fetched successfully:", response.data.discount);
-    return response.data.discount ? Number(response.data.discount) : null;
+    console.log("Coupon fetched successfully:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching coupon:", error);
     return null;
+  }
+}
+
+export async function getCouponDiscountByCode(couponCode: string): Promise<number | null> {
+  const coupon = await getCouponByCode(couponCode);
+  if (!coupon) {
+    console.error("Coupon not found.");
+    return null;
+  }
+  return coupon.discount ? Number(coupon.discount) : null;
+}
+
+export async function disableCoupon(couponCode: string): Promise<void> {
+  try {
+    await axios.patch(`${API_BASE_URL}/coupons/${couponCode}/disable`);
+    console.log(`Coupon ${couponCode} disabled successfully.`);
+  } catch (error) {
+    console.error(`Error disabling coupon ${couponCode}:`, error);
   }
 }

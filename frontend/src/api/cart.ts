@@ -57,6 +57,10 @@ export async function applyCouponToCart(
     );
     return response.data;
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data.message === `Cupom ${coupon_code} não encontrado`) {
+      alert(`Cupom ${coupon_code} não encontrado`);
+      return null;
+    }
     console.error("Error applying coupon to cart:", error);
     return null;
   }

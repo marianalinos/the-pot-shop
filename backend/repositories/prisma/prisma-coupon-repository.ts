@@ -55,7 +55,7 @@ export class PrismaCouponRepository implements CouponRepository {
 
     if (!coupon) return null;
 
-    return new Coupon(coupon.coupon_id, coupon.code, coupon.discount);
+    return new Coupon(coupon.coupon_id, coupon.code, coupon.discount, coupon.expiration, coupon.used);
   }
 
   async update(data: UpdateCouponDTO): Promise<Coupon> {
@@ -80,5 +80,20 @@ export class PrismaCouponRepository implements CouponRepository {
         coupon_id: coupon_id,
       },
     });
+  }
+
+  async disable(coupon_code: string): Promise<Coupon> {
+    const coupon = await this.prisma.coupon.update({
+      where: {
+        code: coupon_code,
+      },
+      data: {
+        used: true,
+      },
+    }); 
+    console.log(coupon)
+
+
+    return new Coupon(coupon.coupon_id, coupon.code, coupon.discount);
   }
 }
