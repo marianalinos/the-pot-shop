@@ -46,9 +46,9 @@ export class OrderController {
 
   async read(req: Request, res: Response): Promise<Response> {
     try {
-      const order_id = req.query.order_id as string;
+      const customer_id = req.query.customer_id as string;
       const orders = await this.repository.read(
-        isNaN(Number(order_id)) || Number(order_id) == 0 ? undefined : Number(order_id)
+        isNaN(Number(customer_id)) || Number(customer_id) == 0 ? undefined : Number(customer_id)
       );
       return res.status(200).json(orders);
     } catch (error: any) {

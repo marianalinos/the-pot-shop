@@ -5,6 +5,8 @@ import {
   CreateOrderDTO,
   UpdateOrderDTO,
 } from "../../controllers/order/order-dto";
+import { CartProduct } from "../../models/cart-product";
+import { Product } from "../../models/product";
 
 export class PrismaOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
@@ -41,26 +43,29 @@ export class PrismaOrderRepository implements OrderRepository {
       createdOrder.cart_id
     );
   }
-  
-  async read(type: number | undefined): Promise<Order[]> {
-    const orders = await this.prisma.order.findMany({
-      where: {
-        order_id: type,
-      },
-    });
 
-    return orders.map(
-      (order) =>
-        new Order(
-          order.order_id,
-          order.created_at,
-          order.status,
-          order.total,
-          order.customer_id,
-          order.cart_id
-        )
-    );
-  }
+  async read(type: number | undefined): Promise<Order[]> {
+  const orders = await this.prisma.order.findMany({
+    where: {
+      customer_id: type,
+    },
+    include: {
+      cart: {
+        include: {
+          products: {
+            include: {
+              product: true,
+            },
+          },
+          coupon: true
+        },
+      },
+    },
+  });
+  // @ts-ignore
+  return orders;
+}
+
 
   async findById(order_id: number): Promise<Order | null> {
     const order = await this.prisma.order.findFirst({

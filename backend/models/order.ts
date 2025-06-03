@@ -1,5 +1,5 @@
 import { Decimal } from "@prisma/client/runtime/library";
-import { OrderStatus } from "@prisma/client";
+import { CartProduct, OrderStatus } from "@prisma/client";
 
 export class Order {
   private order_id: number;
@@ -8,6 +8,7 @@ export class Order {
   private total: Decimal;
   private customer_id: number | null;
   private cart_id: number;
+  private cart_products: CartProduct[];
 
   constructor(
     id: number,
@@ -15,7 +16,8 @@ export class Order {
     status: OrderStatus,
     total: Decimal,
     customerId: number | null,
-    cartId: number
+    cartId: number,
+    cartProducts: CartProduct[] = []
   ) {
     this.order_id = id;
     this.created_at = createdAt;
@@ -23,6 +25,7 @@ export class Order {
     this.total = total;
     this.customer_id = customerId;
     this.cart_id = cartId;
+    this.cart_products = cartProducts;
   }
 
   public getId(): number {
@@ -47,5 +50,9 @@ export class Order {
 
   public getCartId(): number {
     return this.cart_id;
+  }
+
+  public getCartProducts(): CartProduct[] {
+    return this.cart_products;
   }
 }

@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import { type Order, type CartProducts } from "../api/order";
+import { type Order, getOrdersByCustomerId } from "../api/order";
 import { useCustomer } from "../context/CustomerContext";
 import { useEffect, useState } from "react";
 
@@ -11,44 +11,31 @@ export default function Orders() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const mockOrders: Order[] = [
-          {
-            order_id: 1,
-            created_at: new Date("2023-05-15"),
-            status: "Concluído",
-            total: 125.75,
-            cart_products: [
-              {
-                product_id: 101,
-                product_name: "Healing pot",
-                quantity: 2,
-                price: 50.0,
-              },
-              {
-                product_id: 102,
-                product_name: "??? pot",
-                quantity: 1,
-                price: 25.75,
-              },
-            ],
-          },
-          {
-            order_id: 2,
-            created_at: new Date("2023-05-10"),
-            status: "Cancelado",
-            total: 75.5,
-            cart_products: [
-              {
-                product_id: 103,
-                product_name: "Scary pot",
-                quantity: 3,
-                price: 25.0,
-              },
-            ],
-          },
-        ];
-
-        setOrders(mockOrders);
+        getOrdersByCustomerId(currentCustomer!.customer_id!)
+          .then((response) => {
+            const simplifiedOrders: Order[] = [];
+            response.forEach((order) => {
+              const simplifiedOrder: Order = {
+                order_id: order.order_id,
+                created_at: new Date(order.created_at),
+                status: order.status,
+                total: parseFloat(order.total),
+                cart_products: order.cart.products.map((product) => ({
+                  product_id: product.product.product_id,
+                  product_name: product.product.product_name,
+                  quantity: product.quantity,
+                  price: parseFloat(product.product.price),
+                })),
+                cupom: order.cart.coupon ? order.cart.coupon.code : null,
+              };
+              simplifiedOrders.push(simplifiedOrder);
+            });
+            setOrders(simplifiedOrders);
+            console.log(simplifiedOrders)
+          })
+          .catch((error) => {
+            console.error("Error fetching orders:", error);
+          });
       } catch (error) {
         console.error("Failed to fetch orders:", error);
       } finally {
@@ -76,7 +63,7 @@ export default function Orders() {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <OrderCard key={order.order_id} order={order} />
+              <OrderCard key={order.order_id} order={order} cupom={order.cupom ? order.cupom : null} />
             ))}
           </div>
         )}
@@ -85,7 +72,7 @@ export default function Orders() {
   );
 }
 
-function OrderCard({ order }: { order: Order }) {
+function OrderCard({ order, cupom }: { order: Order; cupom: string | null }) {
   const statusColors = {
     Concluído: "bg-[#b98dc2]",
     Cancelado: "bg-red-900",
@@ -124,7 +111,7 @@ function OrderCard({ order }: { order: Order }) {
       </div>
 
       <div className="flex flex-col justify-end text-lg border-t-2 border-[#b98dc2] pt-2">
-        <p>Cupom usado: ESTE AQUI</p>
+        <p>Cupom usado: {cupom ? cupom : "Nenhum"}</p>
         <p>Total: {order.total}</p>
       </div>
     </div>
