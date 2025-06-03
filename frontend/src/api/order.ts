@@ -102,3 +102,14 @@ export async function getOrdersByCustomerId(
   console.log("Orders fetched successfully:", response.data);
   return response.data;
 }
+
+export async function cancelOrder(order_id: number): Promise<void> {
+  console.log("Cancelling order with order_id:", order_id);
+  await axios.patch(
+    `${API_BASE_URL}/orders/${order_id}`,
+    {
+      status: "CANCELADO",
+    }
+  );
+  console.log("Order cancelled successfully");
+}

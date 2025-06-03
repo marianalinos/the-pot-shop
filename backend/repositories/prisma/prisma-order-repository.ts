@@ -1,13 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { OrderStatus, PrismaClient } from "@prisma/client";
 import { OrderRepository } from "../order-repository";
 import { Order } from "../../models/order";
 import {
   CreateOrderDTO,
   UpdateOrderDTO,
 } from "../../controllers/order/order-dto";
-import { CartProduct } from "../../models/cart-product";
-import { Product } from "../../models/product";
-
 export class PrismaOrderRepository implements OrderRepository {
   private prisma: PrismaClient;
 
@@ -114,5 +111,25 @@ export class PrismaOrderRepository implements OrderRepository {
         order_id: order_id,
       },
     });
+  }
+
+  async updateStatus(order_id: number, status: OrderStatus): Promise<Order> {
+    const updatedOrder = await this.prisma.order.update({
+      where: {
+        order_id: order_id,
+      },
+      data: {
+        status: status,
+      },
+    });
+
+    return new Order(
+      updatedOrder.order_id,
+      updatedOrder.created_at,
+      updatedOrder.status,
+      updatedOrder.total,
+      updatedOrder.customer_id,
+      updatedOrder.cart_id
+    );
   }
 }

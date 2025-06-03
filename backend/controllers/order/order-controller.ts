@@ -94,4 +94,20 @@ export class OrderController {
       return res.status(400).json({ message: error.message });
     }
   }
+
+  async updateStatus(req: Request, res: Response): Promise<Response> {
+    try {
+      const { order_id } = req.params;
+      const { status } = req.body;
+
+      if (!status) {
+        return res.status(400).json({ message: "Status is required" });
+      }
+
+      const updatedOrder = await this.repository.updateStatus(Number(order_id), status);
+      return res.status(200).json(updatedOrder);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
 }
