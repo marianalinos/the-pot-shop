@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCustomer } from "../context/CustomerContext";
 import {
   getCartProducts,
@@ -9,11 +9,13 @@ import {
   type CartProduct,
 } from "../api/cart-product";
 import Header from "../components/Header";
-import { applyCouponToCart, getCart } from "../api/cart";
+import { applyCouponToCart, createCart, getCart } from "../api/cart";
 import { getCouponDiscountByCode } from "../api/coupon";
+import { createOrder } from "../api/order";
 
 export default function Cart() {
-  const { currentCart, setCurrentCart } = useCustomer();
+  const { currentCart, setCurrentCart, currentCustomer } = useCustomer();
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -237,7 +239,21 @@ export default function Cart() {
               </div>
             </div>
 
-            <button className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition">
+            <button
+              onClick={async () => {
+                if (!currentCart) return;
+                try {
+                  const order = await createOrder(currentCart.cart_id);
+                  const newCart = await createCart(currentCustomer?.customer_id);
+                  setCurrentCart(newCart);
+                  alert(`Pedido #${order.order_id} criado com sucesso!`);
+                  navigate(`/orders`);
+                } catch (error) {
+                  console.error("Error creating order:", error);
+                }
+              }}
+              className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition"
+            >
               Finalizar compra
             </button>
           </div>

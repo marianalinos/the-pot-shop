@@ -106,7 +106,7 @@ export class PrismaCartRepository implements CartRepository {
 
   async findByCustomerId(customer_id: number): Promise<Cart | null> {
     const cart = await this.prisma.cart.findFirst({
-      where: { customer_id },
+      where: { customer_id, order: null },
       include: {
         products: {
           include: {
@@ -114,7 +114,7 @@ export class PrismaCartRepository implements CartRepository {
           },
         },
         coupon: true,
-      },
+      },      
     });
     return cart
       ? new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
