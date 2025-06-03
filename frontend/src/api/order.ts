@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 
-export type OrderStatus = "Concluído" | "Cancelado";
+export type OrderStatus = "CONCLUÍDO" | "CANCELADO";
 
 const API_BASE_URL = "http://localhost:3000/api";
 

@@ -67,3 +67,28 @@ export async function getCustomerByName(customer_name: string): Promise<Customer
     return null;
   }
 }
+
+export async function updateCustomerWallet(
+  customer_id: number,
+  amount: number
+): Promise<Customer> {
+  try {
+    const response = await axios.patch<Customer>(
+      `${API_BASE_URL}/customers/${customer_id}/wallet`,
+      { amount },
+      {
+        validateStatus: (status) => status === 200 || status === 404
+      }
+    );
+    if (response.status === 200) {
+      return response.data;
+    } else if (response.status === 404) {
+      throw new Error("Customer not found");
+    } else {
+      throw new Error(`Unexpected response: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Failed to update wallet:', error);
+    throw error;
+  }
+}

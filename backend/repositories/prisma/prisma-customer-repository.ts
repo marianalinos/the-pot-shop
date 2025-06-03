@@ -12,6 +12,7 @@ export class PrismaCustomerRepository implements CustomerRepository {
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
+
   async create(data: CreateCustomerDTO): Promise<Customer> {
     const wallet = Math.floor(Math.random() * 46) + 5;
 
@@ -82,5 +83,23 @@ export class PrismaCustomerRepository implements CustomerRepository {
         customer_id: customer_id,
       },
     });
+  }
+
+  async updateWallet(customer_id: number, amount: number): Promise<Customer> {
+    const updatedCustomer = await this.prisma.customer.update({
+      where: {
+        customer_id: customer_id,
+      },
+      data: {
+        wallet: {
+          decrement: amount,
+        },
+      },
+    });
+    return new Customer(
+      updatedCustomer.customer_id,
+      updatedCustomer.customer_name,
+      updatedCustomer.wallet
+    );
   }
 }

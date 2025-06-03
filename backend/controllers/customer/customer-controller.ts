@@ -71,4 +71,20 @@ export class CustomerController {
       return res.status(400).json({ message: error.message });
     }
   }
+  
+  async updateWallet(req: Request, res: Response): Promise<Response> {
+    try {
+      const customer_id = Number(req.params.customer_id);
+      const amount = Number(req.body.amount);
+
+      if (isNaN(amount)) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+
+      const updatedCustomer = await this.repository.updateWallet(customer_id, amount);
+      return res.status(200).json(updatedCustomer);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
 }

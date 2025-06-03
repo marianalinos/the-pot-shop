@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import { GiSwapBag } from "react-icons/gi";
+import { useCustomer } from "../context/CustomerContext";
 
 interface HeaderProps {
   cartItemCount?: number;
 }
 
 export default function Header({ cartItemCount = 0 }: HeaderProps) {
+
+  const { currentCustomer } = useCustomer();
+
   return (
     <header className="sticky min-h-auto min-w-screen bg-[#432e56]/90">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,6 +37,10 @@ export default function Header({ cartItemCount = 0 }: HeaderProps) {
 
           {/* Right side - Cart */}
           <div className="flex items-center">
+            { /* Display customer wallet */ }
+            <div className="text-gray-400 hover:text-gray-500">
+              <span className="font-bold pr-6">{currentCustomer?.wallet}G</span>
+            </div>
             <Link
               to="/cart"
               className="p-1 rounded-b-md text-gray-400 hover:text-gray-500 relative"

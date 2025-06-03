@@ -59,7 +59,7 @@ model CartProduct {
 model Order {
   order_id    Int         @id @default(autoincrement())
   created_at  DateTime    @default(now())
-  status      OrderStatus @default(PENDENTE)
+  status      OrderStatus @default(CONCLUÍDO)
   total       Decimal     @db.Decimal(10, 2)
   customer    Customer?   @relation(fields: [customer_id], references: [customer_id], onDelete: SetNull)
   customer_id Int?
@@ -68,7 +68,6 @@ model Order {
 }
 
 enum OrderStatus {
-  PENDENTE
-  FINALIZADO
+  CONCLUÍDO
   CANCELADO
 }

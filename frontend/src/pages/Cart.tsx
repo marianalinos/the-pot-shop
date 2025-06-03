@@ -12,9 +12,10 @@ import Header from "../components/Header";
 import { applyCouponToCart, createCart, getCart } from "../api/cart";
 import { getCouponDiscountByCode } from "../api/coupon";
 import { createOrder } from "../api/order";
+import { updateCustomerWallet } from "../api/customer";
 
 export default function Cart() {
-  const { currentCart, setCurrentCart, currentCustomer } = useCustomer();
+  const { currentCart, setCurrentCart, currentCustomer, setCurrentCustomer } = useCustomer();
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
   const [couponCode, setCouponCode] = useState("");
@@ -242,9 +243,21 @@ export default function Cart() {
             <button
               onClick={async () => {
                 if (!currentCart) return;
+                if (!currentCustomer) return;
+                if (Number(currentCustomer.wallet) < total) {
+                  alert("Saldo insuficiente para finalizar a compra.");
+                  return;
+                }
                 try {
                   const order = await createOrder(currentCart.cart_id);
-                  const newCart = await createCart(currentCustomer?.customer_id);
+                  const newCustomer = await updateCustomerWallet(
+                    Number(currentCustomer.customer_id),
+                    total
+                  );
+                  setCurrentCustomer(newCustomer);
+                  const newCart = await createCart(
+                    currentCustomer?.customer_id
+                  );
                   setCurrentCart(newCart);
                   alert(`Pedido #${order.order_id} criado com sucesso!`);
                   navigate(`/orders`);

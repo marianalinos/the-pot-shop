@@ -31,7 +31,7 @@ export default function Orders() {
               simplifiedOrders.push(simplifiedOrder);
             });
             setOrders(simplifiedOrders);
-            console.log(simplifiedOrders)
+            console.log(simplifiedOrders);
           })
           .catch((error) => {
             console.error("Error fetching orders:", error);
@@ -63,7 +63,11 @@ export default function Orders() {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <OrderCard key={order.order_id} order={order} cupom={order.cupom ? order.cupom : null} />
+              <OrderCard
+                key={order.order_id}
+                order={order}
+                cupom={order.cupom ? order.cupom : null}
+              />
             ))}
           </div>
         )}
@@ -74,46 +78,49 @@ export default function Orders() {
 
 function OrderCard({ order, cupom }: { order: Order; cupom: string | null }) {
   const statusColors = {
-    Concluído: "bg-[#b98dc2]",
-    Cancelado: "bg-red-900",
+    CONCLUÍDO: "bg-[#b98dc2]",
+    CANCELADO: "bg-red-900",
   };
 
   return (
-    <div className="border-4 border-[#b98dc2] p-6 shadow-[8px_8px_0_#b98dc2] bg-[#432e56]/90">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h2 className="text-2xl font-bold">Pedido #{order.order_id}</h2>
-          <p className="text-lg">
-            Data: {order.created_at.toLocaleDateString("pt-BR")}
-          </p>
+    <>
+      <div className="border-4 border-[#b98dc2] p-6 shadow-[8px_8px_0_#b98dc2] bg-[#432e56]/90">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h2 className="text-2xl font-bold">Pedido #{order.order_id}</h2>
+            <p className="text-lg">
+              Data: {order.created_at.toLocaleDateString("pt-BR")}
+            </p>
+          </div>
+          <span
+            className={`px-3 py-1 rounded-full text-white ${
+              statusColors[order.status]
+            }`}
+          >
+            {order.status.toUpperCase()}
+          </span>
         </div>
-        <span
-          className={`px-3 py-1 rounded-full text-white ${
-            statusColors[order.status]
-          }`}
-        >
-          {order.status.toUpperCase()}
-        </span>
-      </div>
 
-      <div className="mb-4">
-        <h3 className="text-xl mb-2">Itens:</h3>
-        <ul className="space-y-2">
-          {order.cart_products.map((item) => (
-            <li key={item.product_id} className="flex justify-between">
-              <span>
-                {item.product_name} x{item.quantity}
-              </span>
-              <span>{item.price}G</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+        <div className="mb-4">
+          <h3 className="text-xl mb-2">Itens:</h3>
+          <ul className="space-y-2">
+            {order.cart_products.map((item) => (
+              <li key={item.product_id} className="flex justify-between">
+                <span>
+                  {item.product_name} x{item.quantity}
+                </span>
+                <span>{item.price}G</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="flex flex-col justify-end text-lg border-t-2 border-[#b98dc2] pt-2">
-        <p>Cupom usado: {cupom ? cupom : "Nenhum"}</p>
-        <p>Total: {order.total}</p>
+        <div className="flex  justify-between text-lg border-t-2 border-[#b98dc2] pt-2">
+          <p>Cupom usado: {cupom ? cupom : "Nenhum"}</p>
+          <p>Total: {order.total}G</p>
+        </div>
+        <button className="flex justify-self-end-safe">Cancelar pedido</button>
       </div>
-    </div>
+    </>
   );
 }

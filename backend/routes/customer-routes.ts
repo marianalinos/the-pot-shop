@@ -19,5 +19,7 @@ router.post('/', (req, res) => controller.create(req, res));
 router.put('/:customer_id', (req, res) => controller.update(req, res));
 // @ts-ignore
 router.delete('/:customer_id', (req, res) => controller.delete(req, res));
+// @ts-ignore
+router.patch('/:customer_id/wallet', (req, res) => controller.updateWallet(req, res));
 
 export default router;

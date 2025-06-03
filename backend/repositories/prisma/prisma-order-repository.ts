@@ -27,7 +27,7 @@ export class PrismaOrderRepository implements OrderRepository {
 
     const createdOrder = await this.prisma.order.create({
       data: {
-        status: data.status || "PENDENTE",
+        status: data.status || "CONCLUÍDO",
         total: cart.total, // Use the cart's total
         customer_id: cart.customer_id,
         cart_id: data.cart_id,
