@@ -12,18 +12,15 @@ export default function Products() {
     });
   }, []);
 
-
   return (
     <>
       <Header />
+      <h1 className="text-4xl text-center my-8 text-purple-400">NOSSAS POÇÕES</h1>
       <div className="min-w-screen flex flex-col items-center justify-center">
         <div className="products-container">
           {products ? (
             products.map((product) => (
-              <ProductCard
-                key={product.product_id}
-                {...product}
-              />
+              <ProductCard key={product.product_id} {...product} />
             ))
           ) : (
             <p>Carregando produtos...</p>

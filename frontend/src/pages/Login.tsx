@@ -36,7 +36,6 @@ export default function Login() {
           throw new Error("Invalid customer data received");
         }
 
-        console.log('New customer created:', newCustomer);
         loginCustomer(newCustomer);
         navigate('/products');
       } catch (createError) {
@@ -59,7 +58,7 @@ export default function Login() {
 
   if (currentCustomer) {
     return (
-      <div className="min-h-screen min-w-screen flex flex-col items-center justify-center p-4 bg-[#432e56] text-[#b98dc2] font-mono pixelated">
+      <div className="min-h-screen min-w-screen flex flex-col items-center justify-center p-4 bg-[#432e56] text-[#b98dc2]">
         <div className="max-w-md w-full border-4 border-[#b98dc2] p-8 shadow-[8px_8px_0_#b98dc2] bg-[#432e56]/90 text-center">
           <h1 className="text-4xl mb-6 text-shadow-lg shadow-black/50">
             WELCOME BACK, {currentCustomer.customer_name.toUpperCase()}!
@@ -78,7 +77,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen min-w-screen bg-[#432e56] text-[#b98dc2] flex flex-col items-center justify-center p-4 font-mono pixelated">
+    <div className="min-h-screen min-w-screen bg-[#432e56] text-[#b98dc2] flex flex-col items-center justify-center p-4">
       <div className="max-w-md w-full border-4 border-[#b98dc2] p-8 shadow-[8px_8px_0_#b98dc2] bg-[#432e56]/90">
         <h1 className="text-4xl mb-8 text-center text-shadow-lg shadow-black/50">
           THE POTION SHOP 
@@ -102,7 +101,7 @@ export default function Login() {
               placeholder="Your name..."
               maxLength={20}
             />
-            {error && <p className="text-red-400 text-xl mt-2">{error}</p>}
+            {error && <p className="text-red-900 text-xl mt-2">{error}</p>}
           </div>
           
           <button

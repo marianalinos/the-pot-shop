@@ -45,7 +45,6 @@ export function CustomerProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    console.log("Initializing customer context...");
     const initializeCustomer = async () => {
       try {
         if (!currentCustomer) {

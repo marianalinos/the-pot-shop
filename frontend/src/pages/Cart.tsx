@@ -23,7 +23,6 @@ export default function Cart() {
 
   useEffect(() => {
     const fetchCartItems = async () => {
-      console.log("triggou");
       if (!currentCart) return;
       try {
         const items = await getCartProducts(currentCart.cart_id);
@@ -96,7 +95,7 @@ export default function Cart() {
   }
 
   if (error) {
-    return <div className="text-center py-12 text-red-500">{error}</div>;
+    return <div className="text-center py-12 text-red-900">{error}</div>;
   }
 
   if (!cartItems.length) {
@@ -116,6 +115,7 @@ export default function Cart() {
   return (
     <>
       <Header />
+      <h1 className="text-4xl text-center my-8 text-purple-400">SUA SACOLA</h1>
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4">
@@ -163,7 +163,7 @@ export default function Cart() {
                   </p>
                   <button
                     onClick={() => removeItem(item.cart_product_id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-900 hover:text-red-800"
                   >
                     <XMarkIcon className="h-5 w-5" />
                   </button>
@@ -197,7 +197,7 @@ export default function Cart() {
                   placeholder="Insira um cupom..."
                   maxLength={20}
                 />
-                {error && <p className="text-red-400 text-xl mt-2">{error}</p>}
+                {error && <p className="text-red-900 text-xl mt-2">{error}</p>}
                 <button
                   onClick={async () => {
                     if (currentCart) {
