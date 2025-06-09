@@ -31,7 +31,6 @@ export default function Orders() {
               simplifiedOrders.push(simplifiedOrder);
             });
             setOrders(simplifiedOrders);
-            console.log(simplifiedOrders);
           })
           .catch((error) => {
             console.error("Error fetching orders:", error);
@@ -89,7 +88,9 @@ function OrderCard({ order, cupom }: { order: Order; cupom: string | null }) {
       <div className="border-4 border-[#b98dc2] p-6 shadow-[8px_8px_0_#b98dc2] bg-[#432e56]/90">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="text-2xl font-bold">Pedido #{currentOrder.order_id}</h2>
+            <h2 className="text-2xl font-bold">
+              Pedido #{currentOrder.order_id}
+            </h2>
             <p className="text-lg">
               Data: {currentOrder.created_at.toLocaleDateString("pt-BR")}
             </p>
@@ -121,30 +122,29 @@ function OrderCard({ order, cupom }: { order: Order; cupom: string | null }) {
           <p>Cupom usado: {cupom ? cupom : "Nenhum"}</p>
           <p>Total: {currentOrder.total}G</p>
         </div>
-        {(!currentOrder.status || currentOrder.status === "CANCELADO") ?? (
+        {!currentOrder.status || currentOrder.status === "CANCELADO" ? '' : (
           <button
             onClick={async () => {
               const now = new Date();
               const canCancel =
-                now.getTime() - currentOrder.created_at.getTime() < 60000; // 1 minute in milliseconds
+                now.getTime() - currentOrder.created_at.getTime() < 60000; 
               if (canCancel) {
                 if (
                   window.confirm("Tem certeza que deseja cancelar este pedido?")
                 ) {
                   await cancelOrder(currentOrder.order_id);
                   setCurrentOrder({ ...currentOrder, status: "CANCELADO" });
-                console.log(`Pedido ${currentOrder.order_id} cancelado.`);
+                }
+              } else {
+                alert(
+                  "Você só pode cancelar pedidos dentro de 1 minuto após a criação."
+                );
               }
-            } else {
-              alert(
-                "Você só pode cancelar pedidos dentro de 1 minuto após a criação."
-              );
-            }
-          }}
-          className="flex justify-self-end-safe"
-        >
-          Cancelar pedido
-        </button>
+            }}
+            className="flex justify-self-end-safe pl-2 pr-2 pt-1 pb-1"
+          >
+            Cancelar pedido
+          </button>
         )}
       </div>
     </>

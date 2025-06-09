@@ -61,7 +61,7 @@ export default function Login() {
       <div className="min-h-screen min-w-screen flex flex-col items-center justify-center p-4 bg-[#432e56] text-[#b98dc2]">
         <div className="max-w-md w-full border-4 border-[#b98dc2] p-8 shadow-[8px_8px_0_#b98dc2] bg-[#432e56]/90 text-center">
           <h1 className="text-4xl mb-6 text-shadow-lg shadow-black/50">
-            WELCOME BACK, {currentCustomer.customer_name.toUpperCase()}!
+            É BOM TE VER DE NOVO, {currentCustomer.customer_name.toUpperCase()}!
           </h1>
           <button
             onClick={handleLogout}
@@ -69,7 +69,7 @@ export default function Login() {
             hover:bg-[#f47d7d] hover:text-[#432e56] hover:shadow-[2px_2px_0_#f47d7d] 
             hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center"
           >
-            CHANGE CUSTOMER <ArrowLeftIcon className="h-6 w-6 ml-2" />
+            GOSTARIA DE SAIR? <ArrowLeftIcon className="h-6 w-6 ml-2" />
           </button>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function Login() {
         <div className="space-y-6">
           <div>
             <label htmlFor="nickname" className="block text-2xl mb-2">
-              Enter your name:
+              Insira seu nome:
             </label>
             <input
               type="text"
@@ -98,7 +98,7 @@ export default function Login() {
               }}
               className="w-full bg-[#432e56] border-4 border-[#b98dc2] px-4 py-3 text-2xl 
               focus:outline-none focus:ring-2 focus:ring-[#d4b3da] focus:border-transparent"
-              placeholder="Your name..."
+              placeholder="Seu nome..."
               maxLength={20}
             />
             {error && <p className="text-red-900 text-xl mt-2">{error}</p>}
@@ -112,7 +112,7 @@ export default function Login() {
             hover:translate-x-[2px] hover:translate-y-[2px] transition-all
             ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isLoading ? 'PROCESSING...' : 'ENTER SHOP'}
+            {isLoading ? 'PROCESSANDO...' : 'ENTRAR NA LOJA'}
           </button>
         </div>
       </div>

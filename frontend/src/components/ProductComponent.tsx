@@ -16,10 +16,10 @@ export default function ProductCard({
     try {
 
       await addCartProduct(currentCart?.cart_id ?? 1, product_id, quantity);
-      alert("Product added to cart successfully!");
+      alert("Produto adicionado ao carrinho!");
     } catch (error) {
-      console.error("Error adding product to cart:", error);
-      alert("Failed to add product to cart");
+      console.error("Erro ao adicionar produto ao carrinho:", error);
+      alert("Falha ao adicionar produto ao carrinho");
     }
   };
 
