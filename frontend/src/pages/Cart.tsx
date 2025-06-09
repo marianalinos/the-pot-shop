@@ -10,12 +10,17 @@ import {
 } from "../api/cart-product";
 import Header from "../components/Header";
 import { applyCouponToCart, createCart, getCart } from "../api/cart";
-import { disableCoupon, getCouponByCode, getCouponDiscountByCode } from "../api/coupon";
+import {
+  disableCoupon,
+  getCouponByCode,
+  getCouponDiscountByCode,
+} from "../api/coupon";
 import { createOrder } from "../api/order";
 import { updateCustomerWallet } from "../api/customer";
 
 export default function Cart() {
-  const { currentCart, setCurrentCart, currentCustomer, setCurrentCustomer } = useCustomer();
+  const { currentCart, setCurrentCart, currentCustomer, setCurrentCustomer } =
+    useCustomer();
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
   const [couponCode, setCouponCode] = useState("");
@@ -94,7 +99,7 @@ export default function Cart() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-12">Loading cart...</div>;
+    return <div className="text-center py-12">Carregando sacola...</div>;
   }
 
   if (error) {
@@ -103,15 +108,18 @@ export default function Cart() {
 
   if (!cartItems.length) {
     return (
-      <div className="text-center py-12">
-        <p className="text-2xl mb-4">Your cart is empty!</p>
-        <Link
-          to="/products"
-          className="text-2xl text-purple-400 hover:text-purple-300"
-        >
-          Browse Products →
-        </Link>
-      </div>
+      <>
+      <Header />
+        <div className="text-center py-12">
+          <p className="text-2xl mb-4">Sua sacola está vazia!</p>
+          <Link
+            to="/products"
+            className="text-2xl text-purple-400 hover:text-purple-300"
+          >
+            Adicione algum produto! →
+          </Link>
+        </div>
+      </>
     );
   }
 
@@ -215,7 +223,10 @@ export default function Cart() {
                           alert(`Cupom ${couponCode} já foi utilizado`);
                           return;
                         }
-                        if (coupon.expiration && new Date(coupon.expiration) < new Date()) {
+                        if (
+                          coupon.expiration &&
+                          new Date(coupon.expiration) < new Date()
+                        ) {
                           alert(`Cupom ${couponCode} expirado`);
                           return;
                         }
@@ -267,9 +278,7 @@ export default function Cart() {
                     total
                   );
                   if (currentCart.coupon_code) {
-                    await disableCoupon(
-                      currentCart.coupon_code
-                    );
+                    await disableCoupon(currentCart.coupon_code);
                   }
                   setCurrentCustomer(newCustomer);
                   const newCart = await createCart(

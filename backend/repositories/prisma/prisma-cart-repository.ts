@@ -53,7 +53,7 @@ export class PrismaCartRepository implements CartRepository {
       );
     } catch (error) {
       console.error("Erro detalhado:", error);
-      throw new Error("Falha ao criar carrinho. Verifique os dados.");
+      throw new Error("Falha ao criar sacola. Verifique os dados.");
     }
   }
   async read(type: number | undefined): Promise<Cart[]> {

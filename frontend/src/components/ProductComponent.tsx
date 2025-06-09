@@ -16,10 +16,10 @@ export default function ProductCard({
     try {
 
       await addCartProduct(currentCart?.cart_id ?? 1, product_id, quantity);
-      alert("Produto adicionado ao carrinho!");
+      alert("Essa poção tá na sacola!");
     } catch (error) {
-      console.error("Erro ao adicionar produto ao carrinho:", error);
-      alert("Falha ao adicionar produto ao carrinho");
+      console.error("Erro ao adicionar produto na sacola:", error);
+      alert("Falha ao adicionar produto na sacola");
     }
   };
 
@@ -45,7 +45,7 @@ export default function ProductCard({
       </div>
 
       <button onClick={handleAddToCart} className="add-button">
-        ADICIONAR AO CARRINHO
+        COLOCAR NA SACOLA
       </button>
     </div>
   );
