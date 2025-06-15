@@ -1,8 +1,8 @@
-# THE POTION SHOP
+# THE POTION SHOP ⚗️🧪🔮⋆.ೃ࿔*:・
 
 Este projeto é uma aplicação fullstack dividida em `backend` e `frontend`, utilizando Node.js, React, Prisma e Docker.
 
-## 🚀 Pré-requisitos
+## Pré-requisitos
 
 - [Node.js](https://nodejs.org/) instalado
 - [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/) instalados
@@ -40,7 +40,7 @@ npx prisma migrate dev --schema backend/config/prisma/schema.prisma
 Execute o seguinte comando para subir o banco de dados com o Docker:
 
 ```bash
-docker compose up -d
+docker compose up
 ```
 
 ---
