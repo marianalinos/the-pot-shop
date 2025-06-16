@@ -38,7 +38,7 @@ export class PrismaProductRepository implements ProductRepository {
       },
     });
     return products.map(
-      (product) =>
+      (product: any) =>
         new Product(product.product_id, product.product_name, product.price, product.image)
     );
   }

@@ -13,6 +13,11 @@ export class InMemoryCouponRepository implements CouponRepository {
   }
 
   async create(data: CreateCouponDTO): Promise<void> {
+    const existing = await this.findByCode(data.code);
+    if (existing) {
+      throw new Error("Coupon code must be unique");
+    }
+
     const newCoupon = new Coupon(
       this.coupons.length + 1,
       data.code,
@@ -20,6 +25,7 @@ export class InMemoryCouponRepository implements CouponRepository {
       data.expiration ? new Date(data.expiration) : null,
       data.used ?? false
     );
+
     this.coupons.push(newCoupon);
   }
 
@@ -61,5 +67,22 @@ export class InMemoryCouponRepository implements CouponRepository {
     if (index !== -1) {
       this.coupons.splice(index, 1);
     }
+  }
+
+    async disable(coupon_code: string): Promise<Coupon> {
+    const index = this.coupons.findIndex((c) => c.getCode() === coupon_code);
+    if (index === -1) {
+      throw new Error("Coupon not found");
+    }
+    const coupon = this.coupons[index];
+    const disabledCoupon = new Coupon(
+      coupon.getId(),
+      coupon.getCode(),
+      coupon.getDiscount(),
+      coupon.getExpiration(),
+      true
+    );
+    this.coupons[index] = disabledCoupon;
+    return disabledCoupon;
   }
 }

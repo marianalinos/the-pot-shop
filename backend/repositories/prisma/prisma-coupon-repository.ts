@@ -14,6 +14,10 @@ export class PrismaCouponRepository implements CouponRepository {
   }
 
   async create(data: CreateCouponDTO): Promise<void> {
+    const existing = await this.findByCode(data.code);
+    if (existing) {
+      throw new Error("Coupon code must be unique");
+    }
     await this.prisma.coupon.create({
       data: {
         code: data.code,
@@ -30,7 +34,14 @@ export class PrismaCouponRepository implements CouponRepository {
     });
 
     return coupons.map(
-      (coupon) => new Coupon(coupon.coupon_id, coupon.code, coupon.discount, coupon.expiration, coupon.used)
+      (coupon: any) =>
+        new Coupon(
+          coupon.coupon_id,
+          coupon.code,
+          coupon.discount,
+          coupon.expiration,
+          coupon.used
+        )
     );
   }
 
@@ -55,7 +66,13 @@ export class PrismaCouponRepository implements CouponRepository {
 
     if (!coupon) return null;
 
-    return new Coupon(coupon.coupon_id, coupon.code, coupon.discount, coupon.expiration, coupon.used);
+    return new Coupon(
+      coupon.coupon_id,
+      coupon.code,
+      coupon.discount,
+      coupon.expiration,
+      coupon.used
+    );
   }
 
   async update(data: UpdateCouponDTO): Promise<Coupon> {
@@ -90,10 +107,7 @@ export class PrismaCouponRepository implements CouponRepository {
       data: {
         used: true,
       },
-    }); 
-    console.log(coupon)
-
-
+    });
     return new Coupon(coupon.coupon_id, coupon.code, coupon.discount);
   }
 }

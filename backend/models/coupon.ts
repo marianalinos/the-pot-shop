@@ -1,16 +1,14 @@
-import { Decimal } from "@prisma/client/runtime/library.js";
-
 export class Coupon {
   private coupon_id: number;
   private code: string;
-  private discount: Decimal;
+  private discount: number;
   private expiration: Date | null;
   private used: boolean;
 
   constructor(
     coupon_id: number,
     code: string,
-    discount: Decimal,
+    discount: number,
     expiration: Date | null = null,
     used: boolean = false
   ) {
@@ -27,7 +25,7 @@ export class Coupon {
   public getCode(): string {
     return this.code;
   }
-  public getDiscount(): Decimal {
+  public getDiscount(): number {
     return this.discount;
   }
   public getExpiration(): Date | null {

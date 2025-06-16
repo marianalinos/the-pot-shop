@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 import { CouponRepository } from "../../repositories/coupon-repository";
 import { CreateCouponDTO, UpdateCouponDTO } from "./coupon-dto";
@@ -14,7 +13,7 @@ export class CouponController {
     try {
       const createCoupon: CreateCouponDTO = {
         code: String(req.body.code),
-        discount: new Decimal(req.body.discount),
+        discount: req.body.discount,
         expiration: req.body.expiration
           ? new Date(req.body.expiration)
           : undefined,
@@ -65,7 +64,7 @@ export class CouponController {
       const updateCoupon: UpdateCouponDTO = {
         coupon_id: Number(req.params.coupon_id),
         code: String(req.body.code),
-        discount: new Decimal(req.body.discount),
+        discount: req.body.discount,
         expiration: req.body.expiration
           ? new Date(req.body.expiration)
           : undefined,
