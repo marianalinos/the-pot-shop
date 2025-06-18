@@ -22,20 +22,6 @@ export class PrismaCartRepository implements CartRepository {
       };
     }
 
-    // if (data.coupon_code && data.coupon_code !== "null") {
-    //   const couponExists = await this.prisma.coupon.findUnique({
-    //     where: { code: data.coupon_code },
-    //   });
-
-    //   if (!couponExists) {
-    //     throw new Error(`Cupom ${data.coupon_code} não encontrado`);
-    //   }
-
-    //   createData.coupon = {
-    //     connect: { code: data.coupon_code },
-    //   };
-    // }
-
     try {
       const cart = await this.prisma.cart.create({
         data: createData,
@@ -52,7 +38,6 @@ export class PrismaCartRepository implements CartRepository {
         cart.customer?.customer_id
       );
     } catch (error) {
-      console.error("Erro detalhado:", error);
       throw new Error("Falha ao criar sacola. Verifique os dados.");
     }
   }

@@ -3,9 +3,17 @@ import { Request, Response } from "express";
 import { CreateCartDTO, UpdateCartDTO } from "./cart-dto";
 
 export class CartController {
-  constructor(private repository: CartRepository) {}
+  constructor(
+    private repository: CartRepository
+  ) {}
 
   async create(req: Request, res: Response) {
+    const customerId = Number(req.body.customer_id);
+
+    if (!customerId || customerId <= 0) {
+      return res.status(400).json({ message: "ID do consumidor inválido." });
+    }
+
     try {
       const createCart: CreateCartDTO = {
         customer_id: Number(req.body.customer_id),
@@ -21,14 +29,16 @@ export class CartController {
     try {
       const cart_id = req.query.cart_id as string;
       const carts = await this.repository.read(
-        isNaN(Number(cart_id)) || Number(cart_id) == 0 ? undefined : Number(cart_id)
+        isNaN(Number(cart_id)) || Number(cart_id) == 0
+          ? undefined
+          : Number(cart_id)
       );
       return res.status(200).json(carts);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }
   }
-  
+
   async applyCoupon(req: Request, res: Response) {
     try {
       const cart_id = Number(req.params.cart_id);

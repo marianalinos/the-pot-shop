@@ -46,6 +46,23 @@ export class PrismaCustomerRepository implements CustomerRepository {
       customer.wallet
     );
   }
+  async findById(customer_id: number): Promise<Customer | null> {
+    const customer = await this.prisma.customer.findUnique({
+      where: {
+        customer_id: customer_id,
+      },
+    });
+
+    if (!customer) {
+      return null;
+    }
+
+    return new Customer(
+      customer.customer_id,
+      customer.customer_name,
+      customer.wallet
+    );
+  }
   async read(type: number | undefined): Promise<Customer[]> {
     const customers = await this.prisma.customer.findMany({
       where: {

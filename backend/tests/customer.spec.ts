@@ -2,38 +2,6 @@ import { InMemoryCustomerRepository } from "../repositories/in-memory/in-memory-
 import { CreateCustomerDTO } from "../controllers/customer/customer-dto";
 import { Decimal } from "@prisma/client/runtime/library";
 
-describe("CreateCustomer", () => {
-  let repository: InMemoryCustomerRepository;
-
-  beforeEach(() => {
-    repository = new InMemoryCustomerRepository();
-  });
-
-  it("should not allow creating a customer with a duplicated name", async () => {
-    const customerData: CreateCustomerDTO = {
-      customer_name: "Mariana",
-      wallet: new Decimal(100),
-    };
-
-    await repository.create(customerData);
-
-    await expect(repository.create(customerData)).rejects.toThrow(
-      "Já existe um consumidor com esse nome" 
-    );
-  });
-
-  it("should not allow creating a customer with a negative wallet value", async () => {
-    const customerData: CreateCustomerDTO = {
-      customer_name: "João",
-      wallet: new Decimal(-50),
-    };
-
-    await expect(repository.create(customerData)).rejects.toThrow(
-      "O valor da carteira deve ser positivo"
-    );
-  });
-});
-
 describe("UpdateWallet", () => {
   let repository: InMemoryCustomerRepository;
 

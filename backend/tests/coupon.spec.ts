@@ -11,7 +11,7 @@ describe("CreateCoupon", () => {
   });
 
   // O "it" define um caso de teste específico. Neste caso, estamos testando a criação de um cupom com um código único.
-  it("should allow creating a coupon with a unique code", async () => {
+  it("o sistema deve permitir criar um cupom com código único", async () => {
     // Definindo os dados do cupom a ser criado.
     const couponData: CreateCouponDTO = {
       code: "UNIQUECODE",
@@ -29,7 +29,7 @@ describe("CreateCoupon", () => {
   });
 
   // Este teste verifica se a criação de um cupom com um código duplicado lança um erro, garantindo que os códigos de cupom sejam únicos.
-  it("should not allow creating a coupon with a duplicated code", async () => {
+  it("o sistema não deve permitir criar um cupom com um código duplicado", async () => {
     const couponData: CreateCouponDTO = {
       code: "UNIQUECODE",
       discount: 15,
@@ -45,7 +45,7 @@ describe("CreateCoupon", () => {
     );
   });
 
-  it("should not allow creating a coupon with negative discount value", async () => {
+  it("o sistema não deve permitir criar um cupom com um desconto negativo", async () => {
     const couponData: CreateCouponDTO = {
       code: "ANOTHERUNIQUECODE",
       discount: -5,

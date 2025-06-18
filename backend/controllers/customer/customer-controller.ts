@@ -53,6 +53,17 @@ export class CustomerController {
     }
   }
 
+  async findById(req: Request, res: Response): Promise<Response> {
+    try {
+      const customer = await this.repository.findById(Number(req.params.customer_id));
+      return customer
+        ? res.status(200).json(customer)
+        : res.status(404).json({ message: "Customer not found" });
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
+    }
+  }
+
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const updateCustomer: UpdateCustomerDTO = {

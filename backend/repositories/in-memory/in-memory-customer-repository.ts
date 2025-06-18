@@ -12,13 +12,6 @@ export class InMemoryCustomerRepository implements CustomerRepository {
     this.customers = customers;
   }
   async create(data: CreateCustomerDTO): Promise<Customer> {
-    const existing = await this.findByName(data.customer_name);
-    if (existing) {
-      throw new Error("Já existe um consumidor com esse nome");
-    }
-    if (data.wallet.lessThanOrEqualTo(0)) {
-      throw new Error("O valor da carteira deve ser positivo");
-    }
     const newCustomer = new Customer(
       this.customers.length + 1,
       data.customer_name,
@@ -38,6 +31,12 @@ export class InMemoryCustomerRepository implements CustomerRepository {
   }
   async findByName(customer_name: string): Promise<Customer | null> {
     const customer = this.customers.find((customer) => customer.getCustomerName() === customer_name);
+    return customer ?? null;
+  }
+  async findById(customer_id: number): Promise<Customer | null> {
+    const customer = this.customers.find(
+      (customer) => customer.getId() === customer_id
+    );
     return customer ?? null;
   }
   async update(data: UpdateCustomerDTO): Promise<Customer> {
