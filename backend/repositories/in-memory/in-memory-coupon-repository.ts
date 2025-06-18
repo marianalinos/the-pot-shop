@@ -15,9 +15,11 @@ export class InMemoryCouponRepository implements CouponRepository {
   async create(data: CreateCouponDTO): Promise<void> {
     const existing = await this.findByCode(data.code);
     if (existing) {
-      throw new Error("Coupon code must be unique");
+      throw new Error("Já existe um cupom com esse código");
     }
-
+    if (data.discount < 0) {
+      throw new Error("O valor do desconto deve ser positivo");
+    }
     const newCoupon = new Coupon(
       this.coupons.length + 1,
       data.code,

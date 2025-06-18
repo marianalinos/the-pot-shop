@@ -24,4 +24,7 @@ export class Customer {
   public getWallet(): Decimal {
     return this.wallet;
   }
+  public setWallet(wallet: Decimal): void {
+    this.wallet = wallet;
+  }
 }

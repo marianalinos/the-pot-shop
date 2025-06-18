@@ -14,10 +14,6 @@ export class PrismaCouponRepository implements CouponRepository {
   }
 
   async create(data: CreateCouponDTO): Promise<void> {
-    const existing = await this.findByCode(data.code);
-    if (existing) {
-      throw new Error("Coupon code must be unique");
-    }
     await this.prisma.coupon.create({
       data: {
         code: data.code,

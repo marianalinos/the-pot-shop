@@ -11,9 +11,15 @@ export class CustomerController {
   }
   async create(req: Request, res: Response): Promise<Response> {
     try {
+      const existing = await this.repository.findByName(req.body.customer_name);
+      if (existing) {
+        throw new Error("Esse consumidor já existe");
+      }
+      if (req.body.wallet <= 0) {
+        throw new Error("O valor da carteira deve ser positivo");
+      }
       const createCustomer: CreateCustomerDTO = {
         customer_name: String(req.body.customer_name),
-        // Generate random wallet between 5-50 instead of using req.body.wallet
         wallet: new Decimal(Math.floor(Math.random() * 46) + 5),
       };
 
@@ -71,7 +77,7 @@ export class CustomerController {
       return res.status(400).json({ message: error.message });
     }
   }
-  
+
   async updateWallet(req: Request, res: Response): Promise<Response> {
     try {
       const customer_id = Number(req.params.customer_id);
@@ -81,7 +87,15 @@ export class CustomerController {
         return res.status(400).json({ message: "Invalid amount" });
       }
 
-      const updatedCustomer = await this.repository.updateWallet(customer_id, amount);
+      const customers = await this.repository.read(customer_id);
+      const customer = Array.isArray(customers) ? customers[0] : customers;
+      if (customer.getWallet().minus(amount).lessThanOrEqualTo(0)) {
+        return res.status(400).json({ message: "O valor vai negativar a carteira e não é permitido" });
+      }
+      const updatedCustomer = await this.repository.updateWallet(
+        customer_id,
+        amount
+      );
       return res.status(200).json(updatedCustomer);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });

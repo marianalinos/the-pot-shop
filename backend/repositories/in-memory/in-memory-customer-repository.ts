@@ -11,15 +11,21 @@ export class InMemoryCustomerRepository implements CustomerRepository {
   constructor(customers: Customer[] = []) {
     this.customers = customers;
   }
-  async create(data: CreateCustomerDTO): Promise<void> {
+  async create(data: CreateCustomerDTO): Promise<Customer> {
+    const existing = await this.findByName(data.customer_name);
+    if (existing) {
+      throw new Error("Já existe um consumidor com esse nome");
+    }
+    if (data.wallet.lessThanOrEqualTo(0)) {
+      throw new Error("O valor da carteira deve ser positivo");
+    }
     const newCustomer = new Customer(
       this.customers.length + 1,
       data.customer_name,
-      data.email,
-      data.password,
-      data.wallet
+      data.wallet,
     );
     this.customers.push(newCustomer);
+    return newCustomer;
   }
   async read(type: number | undefined): Promise<Customer[]> {
     if (type) {
@@ -30,8 +36,8 @@ export class InMemoryCustomerRepository implements CustomerRepository {
     }
     return this.customers;
   }
-  async findById(customer_id: number): Promise<Customer | null> {
-    const customer = this.customers.find((customer) => customer.getId() === customer_id);
+  async findByName(customer_name: string): Promise<Customer | null> {
+    const customer = this.customers.find((customer) => customer.getCustomerName() === customer_name);
     return customer ?? null;
   }
   async update(data: UpdateCustomerDTO): Promise<Customer> {
@@ -41,9 +47,7 @@ export class InMemoryCustomerRepository implements CustomerRepository {
     const newCustomer = new Customer(
       data.customer_id,
       data.customer_name,
-      data.email,
-      data.password,
-      data.wallet
+      data.wallet,
     );
     this.customers[index] = newCustomer;
     return newCustomer;
@@ -53,5 +57,22 @@ export class InMemoryCustomerRepository implements CustomerRepository {
       (customer) => customer.getId() === customer_id
     );
     this.customers.splice(index, 1);
+  }
+  async updateWallet(customer_id: number, amount: number): Promise<Customer> {
+    const customer = this.customers.find(
+      (customerRepo) => customerRepo.getId() === customer_id
+    );
+    if (!customer) {
+      throw new Error("Customer not found");
+    }
+    if (customer.getWallet().minus(amount).lessThanOrEqualTo(0)) {
+      throw new Error("O valor vai negativar a carteira e não é permitido");
+    }
+    customer.setWallet(customer.getWallet().add(amount));
+    const index = this.customers.findIndex(
+      (customerRepo) => customerRepo.getId() === customer_id
+    );
+    this.customers[index] = customer;
+    return customer;
   }
 }

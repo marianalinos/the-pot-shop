@@ -41,7 +41,18 @@ describe("CreateCoupon", () => {
     // Tenta criar outro cupom com o mesmo código, o que deve falhar.
     // Espera-se que um erro seja lançado, indicando que o código do cupom deve ser único.
     await expect(repository.create(couponData)).rejects.toThrow(
-      "Coupon code must be unique" // Mensagem de erro esperada.
+      "Já existe um cupom com esse código" // Mensagem de erro esperada.
+    );
+  });
+
+  it("should not allow creating a coupon with negative discount value", async () => {
+    const couponData: CreateCouponDTO = {
+      code: "ANOTHERUNIQUECODE",
+      discount: -5,
+    };
+
+    await expect(repository.create(couponData)).rejects.toThrow(
+      "O valor do desconto deve ser positivo"
     );
   });
 });

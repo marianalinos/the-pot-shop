@@ -11,6 +11,15 @@ export class CouponController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
+      const existing = await this.repository.findByCode(req.body.code);
+      if (existing) {
+        throw new Error("Já existe um cupom com esse código");
+      }
+      if (req.body.discount < 0) {
+        return res
+          .status(400)
+          .json({ message: "O valor do desconto deve ser positivo" });
+      }
       const createCoupon: CreateCouponDTO = {
         code: String(req.body.code),
         discount: req.body.discount,
@@ -31,7 +40,9 @@ export class CouponController {
     try {
       const coupon_id = req.query.coupon_id as string;
       const coupons = await this.repository.read(
-        isNaN(Number(coupon_id)) || Number(coupon_id) === 0 ? undefined : Number(coupon_id)
+        isNaN(Number(coupon_id)) || Number(coupon_id) === 0
+          ? undefined
+          : Number(coupon_id)
       );
       return res.status(200).json(coupons);
     } catch (error: any) {

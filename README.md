@@ -23,6 +23,16 @@ npm install
 cd ..
 ```
 
+---
+## 🐳 Subindo os containers com Docker
+
+Execute o seguinte comando para subir o banco de dados com o Docker:
+
+```bash
+docker compose up
+```
+---
+
 ### 3. Gere o cliente Prisma com o schema
 ```bash
 npx prisma generate --schema backend/config/prisma/schema.prisma
@@ -31,16 +41,6 @@ npx prisma generate --schema backend/config/prisma/schema.prisma
 ### 4. Rode as migrações do banco de dados
 ```bash
 npx prisma migrate dev --schema backend/config/prisma/schema.prisma
-```
-
----
-
-## 🐳 Subindo os containers com Docker
-
-Execute o seguinte comando para subir o banco de dados com o Docker:
-
-```bash
-docker compose up
 ```
 
 ---
