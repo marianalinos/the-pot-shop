@@ -11,12 +11,12 @@ Este projeto é uma aplicação fullstack dividida em `backend` e `frontend`, ut
 
 ## 🛠️ Passo a passo para rodar o projeto
 
-### 1. Instale as dependências do projeto principal
+### Instale as dependências do projeto principal
 ```bash
 npm install
 ```
 
-### 2. Vá até a pasta `frontend` e instale as dependências
+### Vá até a pasta `frontend` e instale as dependências
 ```bash
 cd frontend
 npm install
@@ -33,12 +33,12 @@ docker compose up
 ```
 ---
 
-### 3. Gere o cliente Prisma com o schema
+### Gere o cliente Prisma com o schema
 ```bash
 npx prisma generate --schema backend/config/prisma/schema.prisma
 ```
 
-### 4. Rode as migrações do banco de dados
+### Rode as migrações do banco de dados
 ```bash
 npx prisma migrate dev --schema backend/config/prisma/schema.prisma
 ```
