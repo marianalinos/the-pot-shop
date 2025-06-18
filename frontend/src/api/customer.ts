@@ -56,7 +56,7 @@ export async function addCustomer(customer_name: string): Promise<Customer> {
 export async function getCustomerByName(customer_name: string): Promise<Customer | null> {
   try {
     const response = await axios.get<Customer>(
-      `${API_BASE_URL}/customers/${encodeURIComponent(customer_name)}`,
+      `${API_BASE_URL}/customers/name/${encodeURIComponent(customer_name)}`,
       {
         validateStatus: (status) => status === 200 || status === 404
       }
