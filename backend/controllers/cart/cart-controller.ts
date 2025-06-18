@@ -1,10 +1,12 @@
 import { CartRepository } from "../../repositories/cart-repository";
 import { Request, Response } from "express";
 import { CreateCartDTO, UpdateCartDTO } from "./cart-dto";
+import { CustomerRepository } from "../../repositories/customer-repository";
 
 export class CartController {
   constructor(
-    private repository: CartRepository
+    private repository: CartRepository,
+    private customerRepository: CustomerRepository
   ) {}
 
   async create(req: Request, res: Response) {
