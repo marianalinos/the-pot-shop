@@ -19,8 +19,7 @@ export class InMemoryCartRepository implements CartRepository {
     const newCart = new Cart(
       this.currentId++,
       new Decimal(0),
-      data.coupon_code || null,
-      data.customer_id || null
+      data.customer_id !== undefined && data.customer_id !== null ? String(data.customer_id) : undefined,
     );
 
     this.carts.push(newCart);

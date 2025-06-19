@@ -1,24 +1,39 @@
 import { InMemoryCustomerRepository } from "../repositories/in-memory/in-memory-customer-repository";
-import { CreateCustomerDTO } from "../controllers/customer/customer-dto";
-import { Decimal } from "@prisma/client/runtime/library";
+import { CustomerController } from "../controllers/customer/customer-controller";
+import { mockRequest, mockResponse } from "./utils/mock-express";
 
+// Este roteiro de testes verifica a funcionalidade de atualização da carteira de um cliente.
 describe("UpdateWallet", () => {
-  let repository: InMemoryCustomerRepository;
+  let controller: CustomerController;
 
   beforeEach(() => {
-    repository = new InMemoryCustomerRepository();
+    const repository = new InMemoryCustomerRepository();
+    controller = new CustomerController(repository);
   });
 
-  it("should not allow updating a customer's wallet to a negative value", async () => {
-    const customerData: CreateCustomerDTO = {
+  it("sistema não deve permitir atualizar a carteira de um cliente para um valor negativo", async () => {
+    const createReq = mockRequest({
       customer_name: "Ana",
-      wallet: new Decimal(100),
-    };
+      wallet: 100,
+    });
+    const createRes = mockResponse();
+    await controller.create(createReq, createRes);
 
-    const customer = await repository.create(customerData);
+    expect(createRes.status).toHaveBeenCalledWith(201);
+    expect(createRes.send).toHaveBeenCalled();
 
-    await expect(repository.updateWallet(customer.getId(), 100)).rejects.toThrow(
-      "O valor vai negativar a carteira e não é permitido"
+    // Tenta subtrair 200 da carteira
+    const updateReq = mockRequest(
+      { amount: 200 }, // em UpdateWallet, o valor de amount é negativado da carteira, por isso usamos um valor positivo aqui
+      { customer_id: "1" } // params
     );
+    const updateRes = mockResponse();
+
+    await controller.updateWallet(updateReq, updateRes);
+
+    expect(updateRes.status).toHaveBeenCalledWith(400);
+    expect(updateRes.json).toHaveBeenCalledWith({
+      message: "O valor vai negativar a carteira e não é permitido",
+    });
   });
 });

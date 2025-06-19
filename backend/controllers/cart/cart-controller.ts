@@ -10,12 +10,6 @@ export class CartController {
   ) {}
 
   async create(req: Request, res: Response) {
-    const customerId = Number(req.body.customer_id);
-
-    if (!customerId || customerId <= 0) {
-      return res.status(400).json({ message: "ID do consumidor inválido." });
-    }
-
     try {
       const createCart: CreateCartDTO = {
         customer_id: Number(req.body.customer_id),

@@ -64,9 +64,6 @@ export class InMemoryCustomerRepository implements CustomerRepository {
     if (!customer) {
       throw new Error("Customer not found");
     }
-    if (customer.getWallet().minus(amount).lessThanOrEqualTo(0)) {
-      throw new Error("O valor vai negativar a carteira e não é permitido");
-    }
     customer.setWallet(customer.getWallet().add(amount));
     const index = this.customers.findIndex(
       (customerRepo) => customerRepo.getId() === customer_id

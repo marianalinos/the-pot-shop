@@ -22,24 +22,20 @@ export class PrismaCartRepository implements CartRepository {
       };
     }
 
-    try {
-      const cart = await this.prisma.cart.create({
-        data: createData,
-        include: {
-          coupon: true,
-          customer: true,
-        },
-      });
+    const cart = await this.prisma.cart.create({
+      data: createData,
+      include: {
+        coupon: true,
+        customer: true,
+      },
+    });
 
-      return new Cart(
-        cart.cart_id,
-        cart.total,
-        cart.coupon?.code || null,
-        cart.customer?.customer_id
-      );
-    } catch (error) {
-      throw new Error("Falha ao criar sacola. Verifique os dados.");
-    }
+    return new Cart(
+      cart.cart_id,
+      cart.total,
+      cart.coupon?.code || null,
+      cart.customer?.customer_id
+    );
   }
   async read(type: number | undefined): Promise<Cart[]> {
     const carts = await this.prisma.cart.findMany({
@@ -48,7 +44,8 @@ export class PrismaCartRepository implements CartRepository {
       },
     });
     return carts.map(
-      (cart) => new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
+      (cart) =>
+        new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
     );
   }
 
@@ -86,7 +83,12 @@ export class PrismaCartRepository implements CartRepository {
       },
     });
     await this.calculateTotal(cart_id);
-    return new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id); 
+    return new Cart(
+      cart.cart_id,
+      cart.total,
+      cart.coupon_code,
+      cart.customer_id
+    );
   }
 
   async findByCustomerId(customer_id: number): Promise<Cart | null> {
@@ -99,7 +101,7 @@ export class PrismaCartRepository implements CartRepository {
           },
         },
         coupon: true,
-      },      
+      },
     });
     return cart
       ? new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id)
@@ -115,7 +117,12 @@ export class PrismaCartRepository implements CartRepository {
       },
     });
     await this.calculateTotal(data.cart_id);
-    return new Cart(cart.cart_id, cart.total, cart.coupon_code, cart.customer_id);
+    return new Cart(
+      cart.cart_id,
+      cart.total,
+      cart.coupon_code,
+      cart.customer_id
+    );
   }
 
   async delete(cart_id: number): Promise<void> {

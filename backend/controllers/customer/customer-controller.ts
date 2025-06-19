@@ -11,13 +11,6 @@ export class CustomerController {
   }
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const existing = await this.repository.findByName(req.body.customer_name);
-      if (existing) {
-        throw new Error("Esse consumidor já existe");
-      }
-      if (req.body.wallet <= 0) {
-        throw new Error("O valor da carteira deve ser positivo");
-      }
       const createCustomer: CreateCustomerDTO = {
         customer_name: String(req.body.customer_name),
         wallet: new Decimal(Math.floor(Math.random() * 46) + 5),
