@@ -4,6 +4,7 @@ import {
   UpdateOrderDTO,
 } from "../../controllers/order/order-dto";
 import { OrderRepository } from "../order-repository";
+import { OrderStatus } from "@prisma/client";
 
 export class InMemoryOrderRepository implements OrderRepository {
   private orders: Order[] = [];
@@ -23,7 +24,7 @@ export class InMemoryOrderRepository implements OrderRepository {
     const newOrder = new Order(
       this.orders.length + 1,
       new Date(),
-      order.status || "PENDENTE",
+      order.status || "CONCLUÍDO",
       cart.total,
       cart.customer_id || null,
       order.cart_id
@@ -55,6 +56,26 @@ export class InMemoryOrderRepository implements OrderRepository {
       existingOrder.getId(),
       existingOrder.getCreatedAt(),
       data.status,
+      existingOrder.getTotal(),
+      existingOrder.getCustomerId(),
+      existingOrder.getCartId()
+    );
+
+    this.orders[index] = updatedOrder;
+    return updatedOrder;
+  }
+
+  async updateStatus(order_id: number, status: OrderStatus): Promise<Order> {
+    const index = this.orders.findIndex((order) => order.getId() === order_id);
+    if (index === -1) {
+      throw new Error("Order not found");
+    }
+
+    const existingOrder = this.orders[index];
+    const updatedOrder = new Order(
+      existingOrder.getId(),
+      existingOrder.getCreatedAt(),
+      status,
       existingOrder.getTotal(),
       existingOrder.getCustomerId(),
       existingOrder.getCartId()

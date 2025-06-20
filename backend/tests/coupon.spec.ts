@@ -8,6 +8,7 @@ describe("CreateCoupon", () => {
 
   // Antes de cada caso de teste, cria uma nova instância do repositório. Isso garante que os testes não compartilhem dados entre si e garante o isolamento.
   beforeEach(() => {
+    // Cria uma instância do repositório em memória, que simula o armazenamento de cupons sem persistência real
     const repository = new InMemoryCouponRepository();
     controller = new CouponController(repository);
   });
