@@ -10,6 +10,12 @@ export class CartController {
   ) {}
 
   async create(req: Request, res: Response) {
+    const customerId = Number(req.body.customer_id);
+    const customer = await this.customerRepository.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ message: "Consumidor não encontrado." });
+    }
+
     try {
       const createCart: CreateCartDTO = {
         customer_id: Number(req.body.customer_id),
@@ -85,6 +91,12 @@ export class CartController {
 
   async delete(req: Request, res: Response) {
     try {
+      const existing = await this.repository.findById(req.body.cart_id);
+      if (!existing) {
+        throw new Error(
+          "O ID fornecido não corresponde a nenhum carrinho existente."
+        );
+      }
       await this.repository.delete(Number(req.params.cart_id));
       return res.status(204).send();
     } catch (error: any) {

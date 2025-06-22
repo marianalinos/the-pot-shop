@@ -15,7 +15,7 @@ export class OrderController {
   async create(req: Request, res: Response) {
     try {
       const { cart_id } = req.body;
-      
+
       const cart = await this.prisma.cart.findUnique({
         where: { cart_id: Number(cart_id) },
         include: {
@@ -27,10 +27,6 @@ export class OrderController {
           coupon: true,
         },
       });
-
-      if (!cart) {
-        return res.status(404).json({ message: "Cart not found" });
-      }
 
       const createOrder: CreateOrderDTO = {
         status: req.body.status,
@@ -48,7 +44,9 @@ export class OrderController {
     try {
       const customer_id = req.query.customer_id as string;
       const orders = await this.repository.read(
-        isNaN(Number(customer_id)) || Number(customer_id) == 0 ? undefined : Number(customer_id)
+        isNaN(Number(customer_id)) || Number(customer_id) == 0
+          ? undefined
+          : Number(customer_id)
       );
       return res.status(200).json(orders);
     } catch (error: any) {
@@ -94,7 +92,6 @@ export class OrderController {
       return res.status(400).json({ message: error.message });
     }
   }
-
   async updateStatus(req: Request, res: Response): Promise<Response> {
     try {
       const { order_id } = req.params;
@@ -104,7 +101,26 @@ export class OrderController {
         return res.status(400).json({ message: "Status is required" });
       }
 
-      const updatedOrder = await this.repository.updateStatus(Number(order_id), status);
+      const order = await this.repository.findById(Number(order_id));
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      const now = new Date();
+      const diffInMs = now.getTime() - order.getCreatedAt().getTime();
+      const diffInMinutes = diffInMs / 60000;
+
+      if (diffInMinutes > 1) {
+        return res
+          .status(403)
+          .json({ message: "O pedido não pode ser cancelado após 1 minuto." });
+      }
+
+      const updatedOrder = await this.repository.updateStatus(
+        Number(order_id),
+        status
+      );
       return res.status(200).json(updatedOrder);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });

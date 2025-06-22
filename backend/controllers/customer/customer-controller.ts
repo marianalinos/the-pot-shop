@@ -88,7 +88,7 @@ export class CustomerController {
       const amount = Number(req.body.amount);
 
       if (isNaN(amount)) {
-        return res.status(400).json({ message: "Invalid amount" });
+        return res.status(400).json({ message: "Quantidade inválida" });
       }
 
       const customers = await this.repository.read(customer_id);

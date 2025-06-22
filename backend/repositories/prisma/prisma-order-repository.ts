@@ -18,15 +18,11 @@ export class PrismaOrderRepository implements OrderRepository {
       where: { cart_id: data.cart_id },
     });
 
-    if (!cart) {
-      throw new Error("Cart not found");
-    }
-
     const createdOrder = await this.prisma.order.create({
       data: {
         status: data.status || "CONCLUÍDO",
-        total: cart.total, // Use the cart's total
-        customer_id: cart.customer_id,
+        total: cart?.total ?? 0, 
+        customer_id: cart?.customer_id,
         cart_id: data.cart_id,
       },
     });
