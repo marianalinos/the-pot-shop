@@ -13,7 +13,7 @@ export class CustomerController {
     try {
       const createCustomer: CreateCustomerDTO = {
         customer_name: String(req.body.customer_name),
-        wallet: new Decimal(req.body.wallet) ?? new Decimal(Math.floor(Math.random() * 46) + 5),
+        wallet: new Decimal(Math.floor(Math.random() * 46) + 5),
       };
 
       const customer = await this.repository.create(createCustomer);
