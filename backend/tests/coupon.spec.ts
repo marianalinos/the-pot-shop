@@ -34,8 +34,6 @@ describe("CreateCoupon", () => {
 
   // Este teste verifica se a criação de um cupom com um código duplicado lança um erro, garantindo que os códigos de cupom sejam únicos.
   it("o sistema não deve permitir criar um cupom com um código duplicado", async () => {
-    const repository = new InMemoryCouponRepository();
-    controller = new CouponController(repository);
 
     // Cria um cupom inicialmente com o código "DUPLICADO"
     const firstReq = mockRequest({ code: "DUPLICADO", discount: 10 });

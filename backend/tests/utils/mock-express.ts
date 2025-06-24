@@ -5,7 +5,7 @@
  * Quando o servidor recebe uma requisição HTTP, o Express cria objetos `Request` (req) e `Response` (res),
  * que são passados para essas funções para manipular a requisição e construir a resposta.
  *
- * O objeto `Request` contém dados da requisição (como parâmetros, corpo, query string),
+ * O objeto `Request` contém dados da requisição (como parâmetros, body, query string),
  * enquanto o objeto `Response` possui métodos para enviar respostas ao cliente (como status, JSON, texto).
  *
  * Nos testes unitários, para testar controllers isoladamente,
