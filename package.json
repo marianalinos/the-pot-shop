@@ -9,6 +9,9 @@
     "build": "npx swc src -d dist --source-maps",
     "test": "jest"
   },
+  "prisma": {
+      "seed": "ts-node backend/config/prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

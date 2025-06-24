@@ -1,77 +1,30 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  
   // Seed para User
-  await prisma.user.createMany({
-    data: [
-      {
-        user_email: 'joao@gmail.com',
-        user_secret: 'hash_da_senha',
-      },
-      {
-        user_email: 'maria@gmail.com',
-        user_secret: 'hash_da_senha',
-      },
-    ],
+  await prisma.customer.create({
+    data: {
+      customer_name: "Mariana",
+      wallet: 50,
+    },
   });
 
-  // Seed para Employee
-  await prisma.employee.createMany({
+  // Seed para Coupon
+  await prisma.coupon.createMany({
     data: [
       {
-        empl_pis: '123456789',
-        user_id: 1,
+        code: "CUPOM50",
+        discount: 50,
       },
-    ],
-  });
-
-  // Seed para Client
-  await prisma.client.createMany({
-    data: [
       {
-        clie_age: 25,
-        user_id: 2,
+        code: "CUPOM20",
+        discount: 20,
       },
-    ],
-  });
-
-  // Seed para ClientCards
-  await prisma.clientCards.createMany({
-    data: [
       {
-        clca_cvv: 123,
-        clca_holder_name: 'João Silva',
-        clca_cpf: '12345678901',
-        clca_number: '1234123412341234',
-        client_id: 1,
-      },
-    ],
-  });
-
-  // Seed para ClientAddress
-  await prisma.clientAddress.createMany({
-    data: [
-      {
-        clad_street: 'Rua A',
-        clad_number: '123',
-        clad_other: 'apto 101',
-        clad_cep: '12345678',
-        clad_city: 'São Paulo',
-        clad_state: 'SP',
-        client_id: 1,
-      },
-    ],
-  });
-
-  // Seed para Catalogue
-  await prisma.catalogue.createMany({
-    data: [
-      {
-        cata_id: 1,
-        cata_title: 'Catálogo 1',
+        code: "CUPOM80",
+        discount: 80,
       },
     ],
   });
@@ -80,46 +33,42 @@ async function main() {
   await prisma.product.createMany({
     data: [
       {
-        prod_name: 'Produto 1',
-        prod_price: 10.5,
-        prod_description: 'Descrição do produto 1',
-        prod_image: 'imagem1.jpg',
-        prod_type: 1,
-        cata_id: 1,
+        product_name: "??? pot",
+        price: 5,
+        image:
+          "https://static.wikia.nocookie.net/minecraft_gamepedia/images/7/73/Potion_of_Weakness_JE2_BE2.png",
+      },
+      {
+        product_name: "Swiftness pot",
+        price: 15,
+        image:
+          "https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/58/Potion_of_Swiftness_JE3.png",
+      },
+      {
+        product_name: "Healing pot",
+        price: 20,
+        image:
+          "https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3e/Potion_of_Healing_JE2_BE2.png",
       },
     ],
   });
 
-  // Seed para Cart
-  await prisma.cart.createMany({
-    data: [
-      {
-        clie_id: 1,
-      },
-    ],
+  // Seed para criar carrinho
+  await prisma.cart.create({
+    data: {
+      customer_id: 1,
+      total: 0,
+    },
   });
 
-  // Seed para Item
-  await prisma.item.createMany({
-    data: [
-      {
-        prod_id: 1,
-        cart_id: 1,
-      },
-    ],
+  // Seed para criar itens no carrinho
+  await prisma.cartProduct.create({
+    data: {
+      cart_id: 1,
+      product_id: 1,
+      quantity: 1,
+    },
   });
-
-  // Seed para Order
-  await prisma.order.createMany({
-    data: [
-      {
-        orde_nf: '1234567890',
-        orde_status: 1,
-        cart_id: 1,
-      },
-    ],
-  });  
-
 }
 
 main()
