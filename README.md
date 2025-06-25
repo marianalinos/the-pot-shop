@@ -43,6 +43,11 @@ npx prisma generate --schema backend/config/prisma/schema.prisma
 npx prisma migrate dev --schema backend/config/prisma/schema.prisma
 ```
 
+### Popule o banco de dados com os dados básicos do sistema
+```bash
+npx prisma db seed
+```
+
 ---
 
 ## 📦 Rodando o servidor e o frontend
