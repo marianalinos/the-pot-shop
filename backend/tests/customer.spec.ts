@@ -2,6 +2,10 @@ import { InMemoryCustomerRepository } from "../repositories/in-memory/in-memory-
 import { CustomerController } from "../controllers/customer/customer-controller";
 import { mockRequest, mockResponse } from "./utils/mock-express";
 
+describe("CreateCustomer", () => {
+  
+});
+
 // Este roteiro de testes verifica a funcionalidade de atualização da carteira de um cliente.
 describe("UpdateWallet", () => {
   let controller: CustomerController;
